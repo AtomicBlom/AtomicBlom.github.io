@@ -1,0 +1,146 @@
+@{
+        string Title = Model.String(BlogKeys.Title);
+        string PageTitle = Context.String(BlogKeys.Title) + (string.IsNullOrWhiteSpace(Title) ? string.Empty : " - " + Title);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+        <title>@PageTitle</title>
+        <meta name="description" content="@Context.String(BlogKeys.Description)" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">        
+
+        <link type="application/rss+xml" rel="alternate" title="@Context.String(BlogKeys.Title)" href="/feed.rss" />
+        <link type="application/atom+xml" rel="alternate" title="@Context.String(BlogKeys.Title)" href="/feed.atom" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+        <link href="/assets/css/bootstrap.css" rel="stylesheet" />
+        <link href="/assets/css/prettify.css" rel="stylesheet">
+        <link href="/assets/css/github.css" rel="stylesheet">
+        <link href="/assets/css/clean-blog.css" rel="stylesheet" />
+        <link href="/assets/css/master.css" rel="stylesheet" />
+        <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+
+        <meta name="application-name" content="@Context.String(BlogKeys.Title)" />
+        <meta name="msapplication-tooltip" content="@Context.String(BlogKeys.Title)" />
+        <meta name="msapplication-starturl" content="/" />
+
+        <meta property="og:title" content="@PageTitle" />
+        @* <meta property="og:image" content="@Blog.Image" /> *@
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="@Context.GetLink(Model, true)" />
+        <!-- TODO: More social graph meta tags -->
+
+        <script src="/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/assets/js/bootstrap.min.js"></script>     
+        <script src="/assets/js/prettify.js"></script>
+        <script src="/assets/js/clean-blog.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="/assets/js/trianglify.min.js"></script>
+        <script src="/assets/js/Please-compressed.js"></script>
+                
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+                <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+                <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        </head>
+        <body onload="prettyPrint()">
+                
+                <!-- Navigation -->
+                <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+                        <div class="container-fluid">
+                                <!-- Brand and toggle get grouped for better mobile display -->
+                                <div class="navbar-header page-scroll">
+                                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        </button>
+                                        <a class="navbar-brand" href="/">@Context.String(BlogKeys.Title)</a>
+                                </div>
+                        
+                                <!-- Collect the nav links, forms, and other content for toggling -->
+                                <div class="collapse navbar-collapse" id="navbar-collapse">
+                                        <ul class="nav navbar-nav navbar-right">
+                                                @Html.Partial("_Navbar") 
+                                        </ul>
+                                </div>
+                                <!-- /.navbar-collapse -->
+                        </div>
+                        <!-- /.container -->
+                </nav>
+                
+                <!-- Page Header -->
+                @{
+                        string backgroundImage = null;
+                        if(Model.String(BlogKeys.Image) != null)
+                        {
+                                backgroundImage = $"background-image: url(\"{Model.String(BlogKeys.Image)}\")";
+                        }
+                }
+                <header class="intro-header" id="intro-header" style="@backgroundImage">
+                        <div class="container">
+                                <div class="row">
+                                        <div class="col-md-12">
+                                                @if(IsSectionDefined("Header"))
+                                                {
+                                                        @RenderSection("Header")
+                                                }
+                                                else
+                                                {
+                                                        @Html.Partial("_Header")                                            
+                                                }
+                                        </div>
+                                </div>
+                        </div>
+                </header>
+                
+                <!-- Main Content -->
+                <div class="container">
+                        <div class="row">
+                                <div id="content" class="col-md-12">
+                                        @RenderBody()
+                                </div>
+                        </div>
+                </div>
+                
+                <hr>
+                
+                <!-- Footer -->
+                <footer>
+                        @Html.Partial("_Footer")
+                </footer> 
+
+                @Html.Partial("_Scripts")
+
+                @if(Model.String(BlogKeys.Image) == null)
+                {
+                        <script type="text/javascript">                
+                                // Header background                        
+                                var colors = Please.make_color({
+                                        colors_returned: 3,
+                                        saturation: .6
+                                });
+                                var t = new Trianglify({
+                                        x_gradient: colors,
+                                        y_gradient: ["#FFFFFF"]
+                                });
+                                var header = document.getElementById("intro-header");
+                                var pattern = t.generate(header.clientWidth, header.clientHeight);
+                                header.setAttribute('style', 'background-image: ' + pattern.dataUrl);                        
+                        </script>
+                }
+        </body>
+</html>
+

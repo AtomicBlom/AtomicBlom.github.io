@@ -1,0 +1,9 @@
+#recipe Blog
+#theme AtomicBlog
+
+---
+
+Settings.Host = "atomicblom.github.io";
+GlobalMetadata["Title"] = "Atomic Musings";
+GlobalMetadata["Description"] = "Single units of thought";
+GlobalMetadata["Intro"] = "Hi, welcome to my blog!";
