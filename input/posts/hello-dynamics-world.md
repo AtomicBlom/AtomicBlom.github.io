@@ -1,4 +1,5 @@
 Title: Hello Dynamics World
+Lead: A quick summary of my reaction to being immersed in Dynamics, and why I started this blog.
 Published: 5/8/2016
 Tags: DynamicsCRM
 ---

@@ -5,5 +5,5 @@
 
 Settings.Host = "atomicblom.github.io";
 GlobalMetadata["Title"] = "Atomic Musings";
-GlobalMetadata["Description"] = "Single units of thought";
-GlobalMetadata["Intro"] = "Hi, welcome to my blog!";
+GlobalMetadata["Description"] = "Atomic units of thought";
+GlobalMetadata["Intro"] = "The ramblings of Steven Blom.<br/> Featuring topics like C#, Dynamics, SQL Server, JavaScript, Minecraft, Streaming";
