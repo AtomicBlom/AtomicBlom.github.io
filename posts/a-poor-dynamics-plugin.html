@@ -1,0 +1,434 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+        <title>Atomic Musings - A Poor Dynamics Plugin</title>
+        <meta name="description" content="Atomic units of thought" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">        
+
+        <link type="application/rss+xml" rel="alternate" title="Atomic Musings" href="/feed.rss" />
+        <link type="application/atom+xml" rel="alternate" title="Atomic Musings" href="/feed.atom" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link href="/assets/css/prettify.css" rel="stylesheet">
+        <link href="/assets/css/github.css" rel="stylesheet">
+        <link href="/assets/css/clean-blog.css" rel="stylesheet" />
+        <link href="/assets/css/master.css" rel="stylesheet" />
+        <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/default.min.css">
+
+        <meta name="application-name" content="Atomic Musings" />
+        <meta name="msapplication-tooltip" content="Atomic Musings" />
+        <meta name="msapplication-starturl" content="/" />
+
+        <meta property="og:title" content="Atomic Musings - A Poor Dynamics Plugin" />
+        
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="http://atomicblom.github.io/posts/a-poor-dynamics-plugin" />
+        <!-- TODO: More social graph meta tags -->
+
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>     
+        <script src="/assets/js/prettify.js"></script>
+        <script src="/assets/js/clean-blog.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="/assets/js/trianglify.min.js"></script>
+        <script src="/assets/js/Please-compressed.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
+                
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+                <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+                <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        </head>
+        <body onload="prettyPrint()">
+                
+                <!-- Navigation -->
+                <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+                        <div class="container-fluid">
+                                <!-- Brand and toggle get grouped for better mobile display -->
+                                <div class="navbar-header page-scroll">
+                                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        </button>
+                                        <a class="navbar-brand" href="/">Atomic Musings</a>
+                                </div>
+                        
+                                <!-- Collect the nav links, forms, and other content for toggling -->
+                                <div class="collapse navbar-collapse" id="navbar-collapse">
+                                        <ul class="nav navbar-nav navbar-right">
+                                                        <li><a href="/about">About Me</a></li>
+        <li><a href="/tags">All Tags</a></li>
+        <li><a href="/posts">Archive</a></li>
+ 
+                                        </ul>
+                                </div>
+                                <!-- /.navbar-collapse -->
+                        </div>
+                        <!-- /.container -->
+                </nav>
+                
+                <!-- Page Header -->
+
+                <header class="intro-header" id="intro-header">
+                        <div class="container">
+                                <div class="row">
+                                        <div class="col-md-12">
+
+    
+
+<div class="post-heading">
+    <h1>A Poor Dynamics Plugin</h1>
+        <h2 class="subheading">A dissection of the first Dynamics plugin I ever saw</h2>
+    <div class="meta">        
+            Published on Sunday, August 7, 2016<br>
+    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/dynamicscrm" class="btn btn-default btn-xs">DynamicsCRM</a>
+                    <a role="button" href="/tags/ioc" class="btn btn-default btn-xs">IoC</a>
+                    <a role="button" href="/tags/plugin" class="btn btn-default btn-xs">Plugin</a>
+                    <a role="button" href="/tags/unit-testing" class="btn btn-default btn-xs">Unit Testing</a>
+        </div>     
+</div>
+                                        </div>
+                                </div>
+                        </div>
+                </header>
+                
+                <!-- Main Content -->
+                <div class="container">
+                        <div class="row">
+                                <div id="content" class="col-md-12">
+                                        
+
+
+<p>I'd like to show you a slightly modified version of a plugin. This was the first piece of code I had ever seen for the purpose of extending Microsoft Dynamics' backend.</p>
+<p>The reason I was asked to look at this code was because someone had changed something and the plugin was no longer working.</p>
+<p>The first bit of code I ever looked at for dynamics looked something like this:</p>
+<pre><code>public class WebInteraction : IPlugin
+{
+    /// &lt;summary&gt;
+    /// Wrapper function for plugin.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;serviceProvider&quot;&gt;&lt;/param&gt;
+    public void Execute(IServiceProvider serviceProvider)
+    {
+        IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
+        IOrganizationServiceFactory serviceFactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
+        IOrganizationService service = serviceFactory.CreateOrganizationService(context.UserId);
+
+        ITracingService tracingService = (ITracingService)serviceProvider.GetService(typeof(ITracingService));
+        
+        Entity preImageEntity = new Entity();
+        Guid OpportunityID = Guid.Empty;
+        //The InputParameters collection contains all the data passed in the message request.
+        try
+        {
+            if (context.Depth == 1)
+            {
+                string messageName = context.MessageName.ToUpper();
+
+                if (messageName == &quot;CREATE&quot;)
+                {
+                    CreateHandler(context, service);
+                }
+                if (messageName == &quot;UPDATE&quot;)
+                {
+                    UpdateHandler(context, service);
+                }
+                if (messageName == &quot;DELETE&quot;)
+                {
+                    DeleteHandler(context, service);
+                }
+
+            }
+            
+        }
+        catch (Exception ex)
+        {
+            tracingService.Trace(ex.Message);
+        }
+    }   // end of method Execute()
+
+    private void CreateHandler(IPluginExecutionContext context, IOrganizationService service)
+    {
+        if (context.Stage == 20)    // pre-operation stage
+        {
+
+        }
+        else if (context.Stage == 40)   // post-operation stage
+        {
+            if (context.InputParameters.Contains(&quot;Target&quot;) &amp;&amp; context.InputParameters[&quot;Target&quot;] is Entity)
+            {
+                Entity target = (Entity)context.InputParameters[&quot;Target&quot;];
+                
+                // only care if Type = Web,
+                if (target.Contains(&quot;new_type&quot;) &amp;&amp; target.GetAttributeValue&lt;OptionSetValue&gt;(&quot;new_type&quot;).Value == 863580000)
+                {
+                    DoImportantBusinessLogic();
+                }
+            }
+        }   // end of else if
+
+    }   // end of method CreateHandler()
+
+    private void UpdateHandler(IPluginExecutionContext context, IOrganizationService service)
+    {
+        if (context.Stage == 20)    // pre-operation stage
+        {
+
+        }
+        else if (context.Stage == 40)   // post-operation stage
+        {
+            if (context.PostEntityImages.Contains(&quot;PostImage&quot;) &amp;&amp; context.PostEntityImages[&quot;PostImage&quot;] is Entity)
+            {
+                Entity postImage = context.PostEntityImages[&quot;PostImage&quot;];
+                
+            }
+        }   // end of else if
+
+    }   // end of method UpdateHandler()
+
+    private void DeleteHandler(IPluginExecutionContext context, IOrganizationService service)
+    {
+        if (context.Stage == 20)    // pre-operation stage
+        {
+
+        }
+        else if (context.Stage == 40)   // post-operation stage
+        {
+            if (context.PreEntityImages.Contains(&quot;PreImage&quot;) &amp;&amp; context.PreEntityImages[&quot;PreImage&quot;] is Entity)
+            {
+                Entity preImage = context.PreEntityImages[&quot;PreImage&quot;];
+                
+            }
+        }   // end of else if
+
+    }   // end of method DeleteHandler()
+}
+</code></pre>
+<p>This strikes me as some code that someone has grabbed from a template, messed with the bare minimum to get it running and hasn't even stripped out the code that does nothing.</p>
+<p>I'm grateful that they at least left in the comments as to what context.Stage is, because if I'd just seen <code>if (context.Stage == 40)</code> I'd be mighty confused.</p>
+<p>Let's strip this down to what they actually used.</p>
+<pre><code>public class WebInteraction : IPlugin
+{
+    public void Execute(IServiceProvider serviceProvider)
+    {
+        var context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
+
+        try
+        {
+            if (context.Depth != 1) { return; }
+            if (context.Stage != 40) { return; } // post-operation stage
+            if (!&quot;CREATE&quot;.equals(context.MessageName.ToUpper())) { return; }
+            
+            if (!context.InputParameters.Contains(&quot;Target&quot;) || !context.InputParameters[&quot;Target&quot;] is Entity) { return; }
+            
+            var target = (Entity)context.InputParameters[&quot;Target&quot;];
+            
+            // only care if Type = Web,
+            if (target.Contains(&quot;new_type&quot;) &amp;&amp; target.GetAttributeValue&lt;OptionSetValue&gt;(&quot;new_type&quot;).Value == 863580000)
+            {
+                DoImportantBusinessLogic(context);
+            }
+        }
+        catch (Exception ex)
+        {
+            var tracingService = (ITracingService)serviceProvider.GetService(typeof(ITracingService));
+            tracingService.Trace(ex.Message);
+        }
+    }
+}
+</code></pre>
+<p>That wasn't so hard, so, to sum this up:</p>
+<ul>
+<li>the context must be Depth 1</li>
+<li>in Post-Operation stage (Stage 40)</li>
+<li>the message must be &quot;Create&quot;</li>
+<li>it must contain an InputParameter called &quot;Target&quot; which must be of type Entity</li>
+<li>the target must contain an attribute called &quot;new_type&quot; which has an option set value of 863580000, which the comment alludes to is &quot;web&quot;</li>
+</ul>
+<p>Only after all this is met can the plugin execute its purpose.</p>
+<p>A few more things come to mind after cleaning this up.</p>
+<ol>
+<li>Why are all the properties of Dynamics objects keyed by string?</li>
+<li>What is Depth?</li>
+<li>What are the stages?</li>
+<li>Why do option sets have such obtuse numbers behind them</li>
+<li>The plugin was clearly failing, how can I get those trace logs.</li>
+<li>Why catch and log? Why not report an error to the caller?</li>
+</ol>
+<p>To add to all this and make things more interesting, we'll take a quick peek at an example of the business logic.</p>
+<pre><code>private void DoImportantBusinessLogic(IPluginExecutionContext context, IOrganizationService service, Entity interaction)
+{
+    string email = interaction.GetAttributeValue&lt;string&gt;(&quot;new_email&quot;);
+    Entity contact = SearchContactByEmail(context, service, email);
+    
+    if (contact != null)
+    {
+        //Further Process account
+    }
+}
+
+private EntityCollection SearchContactByEmail(IPluginExecutionContext context, IOrganizationService service, string email)
+{
+    string fetchXml = &#64;&quot;&lt;fetch version='1.0' mapping='logical'&gt;
+                        &lt;entity name='contact'&gt;
+                            &lt;order attribute='modifiedon' descending='true' /&gt;
+                            &lt;filter type='and'&gt;
+                                &lt;condition attribute='statecode' operator='eq' value='0' /&gt;
+                                &lt;condition attribute='emailaddress1' operator='eq' value='{0}' /&gt;
+                            &lt;/filter&gt;
+                        &lt;/entity&gt;
+                        &lt;/fetch&gt;&quot;;
+
+    fetchXml = string.Format(fetchXml, email);
+    EntityCollection ec_contacts = service.RetrieveMultiple(new FetchExpression(fetchXml));
+
+    return ec_contacts;
+}
+</code></pre>
+<p>This code at least is only the core logic, there's no extraneous boilerplate code here which is nice, other than their passing around the context and the IOrganizationService to every method.</p>
+<p>This code also suffers from the magic string madness for attribute values and then takes it to the next level using Dynamics' &quot;FetchExpression&quot; xml system.</p>
+<p>To figure out why the plugin wasn't working, I started with trying to get at the tracing service, and I was completely blindsided by the way the tracing service works, specifically with CRM Online.</p>
+<p>You see, in a CRM instance that has been provisioned using the on-premise version of CRM, the trace logs are actually available to you. In the Online version however, getting the trace logs requires a bit of work, some googling lead me to this workflow:</p>
+<ol>
+<li>Start by Downloading the SDK.</li>
+<li>Open the PluginRegistration Tool</li>
+<li>Find the message that's failing</li>
+<li>Start profiling the message.</li>
+<li>(You may need to install the Plugin Tracing solution)</li>
+<li>Trigger the message on CRM</li>
+<li>You should get an error</li>
+<li>Inspect the error to get a package you can save to your PC.</li>
+<li>Go back to PluginRegistration Tool</li>
+<li>Open the Plugin Replay Tool</li>
+<li>Pass in your context from the error</li>
+<li>Give it the path to a copy of the assembly</li>
+<li>Invoke the plugin.</li>
+</ol>
+<p>If all goes well, anything sent to the tracing service will be logged in the replay tool.</p>
+<p>If that doesn't give you enough information, you'll need to debug the plugin:</p>
+<ol start="14">
+<li>Attach Visual Studio to the PluginRegistation tool with your solution open</li>
+<li>Set a breakpoint where you wish to inspect.</li>
+<li>Invoke the plugin again.</li>
+</ol>
+<p>In my case, there were a few caveats to this. Turns out my message wasn't being invoked from the UI, but rather from an external API, with that in mind, and given the nature of the actual plugin, I'm not completely surprised that they weren't sending any information back to the service. It does however leave me wondering, how is a user of the system supposed to know that this business process failed? I have to go through 16 steps to figure out why as a developer?</p>
+<p>In my case, the error was that one of the columns that used to exist and no longer does, I spoke with the various power users, and one explained he had renamed it because it had been inappropriately and confusingly named to begin with.</p>
+<p>With that as my first experience, there were a few things I had resolved to do while I'm working on this system.</p>
+<ol>
+<li>Introduce logging to an external log server.
+<ul>
+<li>This would give me insight into the fact there was an error in the first place</li>
+</ul>
+</li>
+<li>Use Strong typing for entities
+<ul>
+<li>Using CrmSvcUtil to generate classes for us means that a change in schema will break code</li>
+</ul>
+</li>
+<li>Use Linq to CRM where possible
+<ul>
+<li>Linq is commonly used by my workmates, they're more likely to understand it than Fetch XML.</li>
+</ul>
+</li>
+<li>Refactor the code to support unit testing.
+<ul>
+<li>This means bringing out the core logic into a seperate class and splitting the inputs and outputs into their own mechanisms.</li>
+</ul>
+</li>
+<li>Clean up the code using IoC.
+<ul>
+<li>passing around the context doesn't help you know what parts of the plugin need what.</li>
+</ul>
+</li>
+<li>Invest in continuous integration
+<ul>
+<li>The plugin should be doing a nightly build, and part of the nightly build should be updating the strong typing mappings.</li>
+<li>Any changes in schema can be caught nightly.</li>
+</ul>
+</li>
+<li>Isolate your code from CRM
+<ul>
+<li>I've heard from others that CRM is easy to use, and easy to screw up.</li>
+<li>Separating my classes from the CRM interactions means I can adjust for anything I'm doing wrong relatively quicker</li>
+<li>Also, my code should be far easier to test and care less about misconfiguration issues like wrong message types and wrong stages.</li>
+</ul>
+</li>
+<li>Invest in continuous deployment.
+<ul>
+<li>make it so that a checkin on my code should run all the tests and deploy to the staging site.</li>
+<li>unit tests should pass before the code is deployed.</li>
+</ul>
+</li>
+</ol>
+<p>Over the next few blog posts, I'll be discussing approaches to these points and how I've tackled them so far.</p>
+
+
+
+
+                                </div>
+                        </div>
+                </div>
+                
+                <hr>
+                
+                <!-- Footer -->
+                <footer>
+                        <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted">
+                        Copyright © 2016
+                        <br />
+                        <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a> | <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                        <br />
+                        <strong><a href="http://wyam.io">Generated by Wyam</a></strong>
+                    </p>
+                </div>
+        </div>
+</div>
+                </footer> 
+
+                
+
+                        <script type="text/javascript">                
+                                // Header background                        
+                                var colors = Please.make_color({
+                                        colors_returned: 3,
+                                        saturation: .6
+                                });
+                                var t = new Trianglify({
+                                        x_gradient: colors,
+                                        y_gradient: ["#FFFFFF"]
+                                });
+                                var header = document.getElementById("intro-header");
+                                var pattern = t.generate(header.clientWidth, header.clientHeight);
+                                header.setAttribute('style', 'background-image: ' + pattern.dataUrl);                        
+                        </script>
+                <script type="text/javascript">
+                $(document).ready(function() {
+                        $('code').each(function(i, block) {
+                                hljs.highlightBlock(block);
+                        });
+                });
+                </script>
+        </body>
+</html>
+

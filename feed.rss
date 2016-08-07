@@ -5,8 +5,286 @@
 		<link>http://atomicblom.github.io/</link>
 		<description>Atomic units of thought</description>
 		<copyright>2016</copyright>
-		<pubDate>Fri, 05 Aug 2016 12:21:52 GMT</pubDate>
-		<lastBuildDate>Fri, 05 Aug 2016 12:21:52 GMT</lastBuildDate>
+		<pubDate>Sun, 07 Aug 2016 14:18:46 GMT</pubDate>
+		<lastBuildDate>Sun, 07 Aug 2016 14:18:46 GMT</lastBuildDate>
+		<item>
+			<title>A Poor Dynamics Plugin</title>
+			<link>http://atomicblom.github.io/posts/a-poor-dynamics-plugin</link>
+			<description>&lt;p&gt;I'd like to show you a slightly modified version of a plugin. This was the first piece of code I had ever seen for the purpose of extending Microsoft Dynamics' backend.&lt;/p&gt;</description>
+			<guid>http://atomicblom.github.io/posts/a-poor-dynamics-plugin</guid>
+			<pubDate>Sun, 07 Aug 2016 00:00:00 GMT</pubDate>
+			<content:encoded>
+                                        
+
+
+&lt;p&gt;I'd like to show you a slightly modified version of a plugin. This was the first piece of code I had ever seen for the purpose of extending Microsoft Dynamics' backend.&lt;/p&gt;
+&lt;p&gt;The reason I was asked to look at this code was because someone had changed something and the plugin was no longer working.&lt;/p&gt;
+&lt;p&gt;The first bit of code I ever looked at for dynamics looked something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;public class WebInteraction : IPlugin
+{
+    /// &amp;lt;summary&amp;gt;
+    /// Wrapper function for plugin.
+    /// &amp;lt;/summary&amp;gt;
+    /// &amp;lt;param name="serviceProvider"&amp;gt;&amp;lt;/param&amp;gt;
+    public void Execute(IServiceProvider serviceProvider)
+    {
+        IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
+        IOrganizationServiceFactory serviceFactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
+        IOrganizationService service = serviceFactory.CreateOrganizationService(context.UserId);
+
+        ITracingService tracingService = (ITracingService)serviceProvider.GetService(typeof(ITracingService));
+        
+        Entity preImageEntity = new Entity();
+        Guid OpportunityID = Guid.Empty;
+        //The InputParameters collection contains all the data passed in the message request.
+        try
+        {
+            if (context.Depth == 1)
+            {
+                string messageName = context.MessageName.ToUpper();
+
+                if (messageName == "CREATE")
+                {
+                    CreateHandler(context, service);
+                }
+                if (messageName == "UPDATE")
+                {
+                    UpdateHandler(context, service);
+                }
+                if (messageName == "DELETE")
+                {
+                    DeleteHandler(context, service);
+                }
+
+            }
+            
+        }
+        catch (Exception ex)
+        {
+            tracingService.Trace(ex.Message);
+        }
+    }   // end of method Execute()
+
+    private void CreateHandler(IPluginExecutionContext context, IOrganizationService service)
+    {
+        if (context.Stage == 20)    // pre-operation stage
+        {
+
+        }
+        else if (context.Stage == 40)   // post-operation stage
+        {
+            if (context.InputParameters.Contains("Target") &amp;amp;&amp;amp; context.InputParameters["Target"] is Entity)
+            {
+                Entity target = (Entity)context.InputParameters["Target"];
+                
+                // only care if Type = Web,
+                if (target.Contains("new_type") &amp;amp;&amp;amp; target.GetAttributeValue&amp;lt;OptionSetValue&amp;gt;("new_type").Value == 863580000)
+                {
+                    DoImportantBusinessLogic();
+                }
+            }
+        }   // end of else if
+
+    }   // end of method CreateHandler()
+
+    private void UpdateHandler(IPluginExecutionContext context, IOrganizationService service)
+    {
+        if (context.Stage == 20)    // pre-operation stage
+        {
+
+        }
+        else if (context.Stage == 40)   // post-operation stage
+        {
+            if (context.PostEntityImages.Contains("PostImage") &amp;amp;&amp;amp; context.PostEntityImages["PostImage"] is Entity)
+            {
+                Entity postImage = context.PostEntityImages["PostImage"];
+                
+            }
+        }   // end of else if
+
+    }   // end of method UpdateHandler()
+
+    private void DeleteHandler(IPluginExecutionContext context, IOrganizationService service)
+    {
+        if (context.Stage == 20)    // pre-operation stage
+        {
+
+        }
+        else if (context.Stage == 40)   // post-operation stage
+        {
+            if (context.PreEntityImages.Contains("PreImage") &amp;amp;&amp;amp; context.PreEntityImages["PreImage"] is Entity)
+            {
+                Entity preImage = context.PreEntityImages["PreImage"];
+                
+            }
+        }   // end of else if
+
+    }   // end of method DeleteHandler()
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This strikes me as some code that someone has grabbed from a template, messed with the bare minimum to get it running and hasn't even stripped out the code that does nothing.&lt;/p&gt;
+&lt;p&gt;I'm grateful that they at least left in the comments as to what context.Stage is, because if I'd just seen &lt;code&gt;if (context.Stage == 40)&lt;/code&gt; I'd be mighty confused.&lt;/p&gt;
+&lt;p&gt;Let's strip this down to what they actually used.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;public class WebInteraction : IPlugin
+{
+    public void Execute(IServiceProvider serviceProvider)
+    {
+        var context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
+
+        try
+        {
+            if (context.Depth != 1) { return; }
+            if (context.Stage != 40) { return; } // post-operation stage
+            if (!"CREATE".equals(context.MessageName.ToUpper())) { return; }
+            
+            if (!context.InputParameters.Contains("Target") || !context.InputParameters["Target"] is Entity) { return; }
+            
+            var target = (Entity)context.InputParameters["Target"];
+            
+            // only care if Type = Web,
+            if (target.Contains("new_type") &amp;amp;&amp;amp; target.GetAttributeValue&amp;lt;OptionSetValue&amp;gt;("new_type").Value == 863580000)
+            {
+                DoImportantBusinessLogic(context);
+            }
+        }
+        catch (Exception ex)
+        {
+            var tracingService = (ITracingService)serviceProvider.GetService(typeof(ITracingService));
+            tracingService.Trace(ex.Message);
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That wasn't so hard, so, to sum this up:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;the context must be Depth 1&lt;/li&gt;
+&lt;li&gt;in Post-Operation stage (Stage 40)&lt;/li&gt;
+&lt;li&gt;the message must be "Create"&lt;/li&gt;
+&lt;li&gt;it must contain an InputParameter called "Target" which must be of type Entity&lt;/li&gt;
+&lt;li&gt;the target must contain an attribute called "new_type" which has an option set value of 863580000, which the comment alludes to is "web"&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Only after all this is met can the plugin execute its purpose.&lt;/p&gt;
+&lt;p&gt;A few more things come to mind after cleaning this up.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Why are all the properties of Dynamics objects keyed by string?&lt;/li&gt;
+&lt;li&gt;What is Depth?&lt;/li&gt;
+&lt;li&gt;What are the stages?&lt;/li&gt;
+&lt;li&gt;Why do option sets have such obtuse numbers behind them&lt;/li&gt;
+&lt;li&gt;The plugin was clearly failing, how can I get those trace logs.&lt;/li&gt;
+&lt;li&gt;Why catch and log? Why not report an error to the caller?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;To add to all this and make things more interesting, we'll take a quick peek at an example of the business logic.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;private void DoImportantBusinessLogic(IPluginExecutionContext context, IOrganizationService service, Entity interaction)
+{
+    string email = interaction.GetAttributeValue&amp;lt;string&amp;gt;("new_email");
+    Entity contact = SearchContactByEmail(context, service, email);
+    
+    if (contact != null)
+    {
+        //Further Process account
+    }
+}
+
+private EntityCollection SearchContactByEmail(IPluginExecutionContext context, IOrganizationService service, string email)
+{
+    string fetchXml = @"&amp;lt;fetch version='1.0' mapping='logical'&amp;gt;
+                        &amp;lt;entity name='contact'&amp;gt;
+                            &amp;lt;order attribute='modifiedon' descending='true' /&amp;gt;
+                            &amp;lt;filter type='and'&amp;gt;
+                                &amp;lt;condition attribute='statecode' operator='eq' value='0' /&amp;gt;
+                                &amp;lt;condition attribute='emailaddress1' operator='eq' value='{0}' /&amp;gt;
+                            &amp;lt;/filter&amp;gt;
+                        &amp;lt;/entity&amp;gt;
+                        &amp;lt;/fetch&amp;gt;";
+
+    fetchXml = string.Format(fetchXml, email);
+    EntityCollection ec_contacts = service.RetrieveMultiple(new FetchExpression(fetchXml));
+
+    return ec_contacts;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This code at least is only the core logic, there's no extraneous boilerplate code here which is nice, other than their passing around the context and the IOrganizationService to every method.&lt;/p&gt;
+&lt;p&gt;This code also suffers from the magic string madness for attribute values and then takes it to the next level using Dynamics' "FetchExpression" xml system.&lt;/p&gt;
+&lt;p&gt;To figure out why the plugin wasn't working, I started with trying to get at the tracing service, and I was completely blindsided by the way the tracing service works, specifically with CRM Online.&lt;/p&gt;
+&lt;p&gt;You see, in a CRM instance that has been provisioned using the on-premise version of CRM, the trace logs are actually available to you. In the Online version however, getting the trace logs requires a bit of work, some googling lead me to this workflow:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Start by Downloading the SDK.&lt;/li&gt;
+&lt;li&gt;Open the PluginRegistration Tool&lt;/li&gt;
+&lt;li&gt;Find the message that's failing&lt;/li&gt;
+&lt;li&gt;Start profiling the message.&lt;/li&gt;
+&lt;li&gt;(You may need to install the Plugin Tracing solution)&lt;/li&gt;
+&lt;li&gt;Trigger the message on CRM&lt;/li&gt;
+&lt;li&gt;You should get an error&lt;/li&gt;
+&lt;li&gt;Inspect the error to get a package you can save to your PC.&lt;/li&gt;
+&lt;li&gt;Go back to PluginRegistration Tool&lt;/li&gt;
+&lt;li&gt;Open the Plugin Replay Tool&lt;/li&gt;
+&lt;li&gt;Pass in your context from the error&lt;/li&gt;
+&lt;li&gt;Give it the path to a copy of the assembly&lt;/li&gt;
+&lt;li&gt;Invoke the plugin.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If all goes well, anything sent to the tracing service will be logged in the replay tool.&lt;/p&gt;
+&lt;p&gt;If that doesn't give you enough information, you'll need to debug the plugin:&lt;/p&gt;
+&lt;ol start="14"&gt;
+&lt;li&gt;Attach Visual Studio to the PluginRegistation tool with your solution open&lt;/li&gt;
+&lt;li&gt;Set a breakpoint where you wish to inspect.&lt;/li&gt;
+&lt;li&gt;Invoke the plugin again.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;In my case, there were a few caveats to this. Turns out my message wasn't being invoked from the UI, but rather from an external API, with that in mind, and given the nature of the actual plugin, I'm not completely surprised that they weren't sending any information back to the service. It does however leave me wondering, how is a user of the system supposed to know that this business process failed? I have to go through 16 steps to figure out why as a developer?&lt;/p&gt;
+&lt;p&gt;In my case, the error was that one of the columns that used to exist and no longer does, I spoke with the various power users, and one explained he had renamed it because it had been inappropriately and confusingly named to begin with.&lt;/p&gt;
+&lt;p&gt;With that as my first experience, there were a few things I had resolved to do while I'm working on this system.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Introduce logging to an external log server.
+&lt;ul&gt;
+&lt;li&gt;This would give me insight into the fact there was an error in the first place&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Use Strong typing for entities
+&lt;ul&gt;
+&lt;li&gt;Using CrmSvcUtil to generate classes for us means that a change in schema will break code&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Use Linq to CRM where possible
+&lt;ul&gt;
+&lt;li&gt;Linq is commonly used by my workmates, they're more likely to understand it than Fetch XML.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Refactor the code to support unit testing.
+&lt;ul&gt;
+&lt;li&gt;This means bringing out the core logic into a seperate class and splitting the inputs and outputs into their own mechanisms.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Clean up the code using IoC.
+&lt;ul&gt;
+&lt;li&gt;passing around the context doesn't help you know what parts of the plugin need what.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Invest in continuous integration
+&lt;ul&gt;
+&lt;li&gt;The plugin should be doing a nightly build, and part of the nightly build should be updating the strong typing mappings.&lt;/li&gt;
+&lt;li&gt;Any changes in schema can be caught nightly.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Isolate your code from CRM
+&lt;ul&gt;
+&lt;li&gt;I've heard from others that CRM is easy to use, and easy to screw up.&lt;/li&gt;
+&lt;li&gt;Separating my classes from the CRM interactions means I can adjust for anything I'm doing wrong relatively quicker&lt;/li&gt;
+&lt;li&gt;Also, my code should be far easier to test and care less about misconfiguration issues like wrong message types and wrong stages.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Invest in continuous deployment.
+&lt;ul&gt;
+&lt;li&gt;make it so that a checkin on my code should run all the tests and deploy to the staging site.&lt;/li&gt;
+&lt;li&gt;unit tests should pass before the code is deployed.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Over the next few blog posts, I'll be discussing approaches to these points and how I've tackled them so far.&lt;/p&gt;
+
+
+
+
+                                </content:encoded>
+		</item>
 		<item>
 			<title>Hello Dynamics World</title>
 			<link>http://atomicblom.github.io/posts/hello-dynamics-world</link>
