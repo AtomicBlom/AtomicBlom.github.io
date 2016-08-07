@@ -45,7 +45,7 @@ public static class BlogPipelines
 Settings.Host = "atomicblom.github.io";
 GlobalMetadata["Title"] = "Atomic Musings";
 GlobalMetadata["Description"] = "Atomic units of thought";
-GlobalMetadata["Intro"] = "The ramblings of Steven Blom.<br/> Featuring topics like C#, Dynamics, SQL Server, JavaScript, Minecraft, Streaming";
+GlobalMetadata["Intro"] = "Featuring topics like C#, Dynamics, SQL Server, JavaScript, Minecraft, Streaming";
  
  // Get the pages first so they're available in the navbar, but don't render until last
 Pipelines.Add("Pages",
