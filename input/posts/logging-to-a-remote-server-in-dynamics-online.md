@@ -1,4 +1,4 @@
-Title:Logging to a remote server in Dynamics online
+Title: Logging to a remote server in Dynamics online
 Tags: ['DynamicsCRM', 'Logging', 'Plugin']
 Lead: Logging in Dynamics shouldbe easy right?
 ---
