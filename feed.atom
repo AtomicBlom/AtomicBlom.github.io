@@ -4,8 +4,59 @@
 	<id>http://atomicblom.github.io/</id>
 	<title>Atomic Musings</title>
 	<rights>2016</rights>
-	<updated>2016-08-09T15:33:18Z</updated>
+	<updated>2016-08-09T15:50:18Z</updated>
 	<subtitle>Atomic units of thought</subtitle>
+	<entry>
+		<link href="http://atomicblom.github.io/posts/hello-dynamics-world" />
+		<id>http://atomicblom.github.io/posts/hello-dynamics-world</id>
+		<title>Hello Dynamics World</title>
+		<updated>2016-05-08T00:00:00Z</updated>
+		<content>
+                                        
+
+
+&lt;p&gt;Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.&lt;/p&gt;
+&lt;p&gt;I'm optimistic that Regardless of how people feel about it, I think it will be a good fit for the system it's replacing.&lt;/p&gt;
+&lt;p&gt;Straight out of the gate however, there are a number of things that worried me.&lt;/p&gt;
+&lt;p&gt;First, the plugin code that I had been given had no tests, everything was static methods with raw linq-to-crm, so it wasn't even designed with testing in mind.&lt;/p&gt;
+&lt;p&gt;Secondly, the front end, a BA had written a bunch of JavaScript to add some nice features, but the JavaScript was potentially quite buggy in the way it was implemented.&lt;/p&gt;
+&lt;p&gt;Thirdly, I was entering the Dynamics scene with no training, and the knowledge that people have done a lot with Dynamics, but it's also really easy to screw it up.&lt;/p&gt;
+&lt;p&gt;With that in mind, I'd like to start a series of blog posts about how I reengineered our plugins with the following goals in mind:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The plugins should be unit testable&lt;/li&gt;
+&lt;li&gt;The plugins should use IoC framework so that they only contain what they need to function.&lt;/li&gt;
+&lt;li&gt;The plugins should provide insight into how they're functioning&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Meanwhile on the frontend, I've set up a WebPack workflow to allow us to write ES6/7 JavaScript using Async/Await to improve the readability and durabiliy of the JavaScript.&lt;/p&gt;
+&lt;p&gt;It is my hope that my Blog will help others to write better code and provide a place where people can offer me advice to how I can improve our workflow as well.&lt;/p&gt;
+
+
+
+
+
+&lt;div id="disqus_thread"&gt;&lt;/div&gt;
+&lt;script&gt;
+
+/**
+ *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+ *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables */
+/*
+var disqus_config = function () {
+    this.page.url = 'http://atomicblom.github.io/posts/hello-dynamics-world';  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = 'hello-dynamics-world'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = '//atomicblom-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();
+&lt;/script&gt;
+&lt;noscript&gt;Please enable JavaScript to view the &lt;a href="https://disqus.com/?ref_noscript"&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
+                                </content>
+		<summary>&lt;p&gt;Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<link href="http://atomicblom.github.io/posts/a-poor-dynamics-plugin" />
 		<id>http://atomicblom.github.io/posts/a-poor-dynamics-plugin</id>
@@ -281,37 +332,28 @@ private EntityCollection SearchContactByEmail(IPluginExecutionContext context, I
 
 
 
+
+&lt;div id="disqus_thread"&gt;&lt;/div&gt;
+&lt;script&gt;
+
+/**
+ *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+ *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables */
+/*
+var disqus_config = function () {
+    this.page.url = 'http://atomicblom.github.io/posts/a-poor-dynamics-plugin';  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = 'a-poor-dynamics-plugin'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = '//atomicblom-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();
+&lt;/script&gt;
+&lt;noscript&gt;Please enable JavaScript to view the &lt;a href="https://disqus.com/?ref_noscript"&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
                                 </content>
 		<summary>&lt;p&gt;I'd like to show you a slightly modified version of a plugin. This was the first piece of code I had ever seen for the purpose of extending Microsoft Dynamics' backend.&lt;/p&gt;</summary>
-	</entry>
-	<entry>
-		<link href="http://atomicblom.github.io/posts/hello-dynamics-world" />
-		<id>http://atomicblom.github.io/posts/hello-dynamics-world</id>
-		<title>Hello Dynamics World</title>
-		<updated>2016-05-08T00:00:00Z</updated>
-		<content>
-                                        
-
-
-&lt;p&gt;Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.&lt;/p&gt;
-&lt;p&gt;I'm optimistic that Regardless of how people feel about it, I think it will be a good fit for the system it's replacing.&lt;/p&gt;
-&lt;p&gt;Straight out of the gate however, there are a number of things that worried me.&lt;/p&gt;
-&lt;p&gt;First, the plugin code that I had been given had no tests, everything was static methods with raw linq-to-crm, so it wasn't even designed with testing in mind.&lt;/p&gt;
-&lt;p&gt;Secondly, the front end, a BA had written a bunch of JavaScript to add some nice features, but the JavaScript was potentially quite buggy in the way it was implemented.&lt;/p&gt;
-&lt;p&gt;Thirdly, I was entering the Dynamics scene with no training, and the knowledge that people have done a lot with Dynamics, but it's also really easy to screw it up.&lt;/p&gt;
-&lt;p&gt;With that in mind, I'd like to start a series of blog posts about how I reengineered our plugins with the following goals in mind:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;The plugins should be unit testable&lt;/li&gt;
-&lt;li&gt;The plugins should use IoC framework so that they only contain what they need to function.&lt;/li&gt;
-&lt;li&gt;The plugins should provide insight into how they're functioning&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Meanwhile on the frontend, I've set up a WebPack workflow to allow us to write ES6/7 JavaScript using Async/Await to improve the readability and durabiliy of the JavaScript.&lt;/p&gt;
-&lt;p&gt;It is my hope that my Blog will help others to write better code and provide a place where people can offer me advice to how I can improve our workflow as well.&lt;/p&gt;
-
-
-
-
-                                </content>
-		<summary>&lt;p&gt;Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.&lt;/p&gt;</summary>
 	</entry>
 </feed>
