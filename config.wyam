@@ -37,7 +37,7 @@ public static class BlogPipelines
     public const string Resources = nameof(Resources);
     public const string Feed = nameof(Feed);
 }
----
+
 Settings.Host = "atomicblom.github.io";
 GlobalMetadata["Title"] = "Atomic Musings";
 GlobalMetadata["Description"] = "Atomic units of thought";
