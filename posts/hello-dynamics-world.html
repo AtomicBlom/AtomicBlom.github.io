@@ -117,18 +117,23 @@
 <p>Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.</p>
 <p>I'm optimistic that Regardless of how people feel about it, I think it will be a good fit for the system it's replacing.</p>
 <p>Straight out of the gate however, there are a number of things that worried me.</p>
-<p>First, the plugin code that I had been given had no tests, everything was static methods with raw linq-to-crm, so it wasn't even designed with testing in mind.</p>
-<p>Secondly, the front end, a BA had written a bunch of JavaScript to add some nice features, but the JavaScript was potentially quite buggy in the way it was implemented.</p>
-<p>Thirdly, I was entering the Dynamics scene with no training, and the knowledge that people have done a lot with Dynamics, but it's also really easy to screw it up.</p>
-<p>With that in mind, I'd like to start a series of blog posts about how I reengineered our plugins with the following goals in mind:</p>
+<p>First, the plugin code that I had been given had no tests, everything was static methods with raw linq-to-crm, so it
+wasn't even designed with testing in mind.</p>
+<p>Secondly, the front end, a BA had written a bunch of JavaScript to add some nice features, but the JavaScript was
+potentially quite buggy in the way it was implemented.</p>
+<p>Thirdly, I was entering the Dynamics scene with no training, and the knowledge that people have done a lot with
+Dynamics, but it's also really easy to screw it up.</p>
+<p>With that in mind, I'd like to start a series of blog posts about how I reengineered our plugins with the following
+goals in mind:</p>
 <ol>
 <li>The plugins should be unit testable</li>
 <li>The plugins should use IoC framework so that they only contain what they need to function.</li>
 <li>The plugins should provide insight into how they're functioning</li>
 </ol>
-<p>Meanwhile on the frontend, I've set up a WebPack workflow to allow us to write ES6/7 JavaScript using Async/Await to improve the readability and durabiliy of the JavaScript.</p>
-<p>It is my hope that my Blog will help others to write better code and provide a place where people can offer me advice to how I can improve our workflow as well.</p>
-
+<p>Meanwhile on the frontend, I've set up a WebPack workflow to allow us to write ES6/7 JavaScript using Async/Await to
+improve the readability and durabiliy of the JavaScript.</p>
+<p>It is my hope that my Blog will help others to write better code and provide a place where people can offer me advice
+to how I can improve our workflow as well.</p>
 
 
 

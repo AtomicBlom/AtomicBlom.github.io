@@ -4,32 +4,59 @@
 	<id>http://atomicblom.github.io/</id>
 	<title>Atomic Musings</title>
 	<rights>2016</rights>
-	<updated>2016-08-09T15:50:18Z</updated>
+	<updated>2016-08-15T06:51:20Z</updated>
 	<subtitle>Atomic units of thought</subtitle>
 	<entry>
-		<link href="http://atomicblom.github.io/posts/hello-dynamics-world" />
-		<id>http://atomicblom.github.io/posts/hello-dynamics-world</id>
-		<title>Hello Dynamics World</title>
-		<updated>2016-05-08T00:00:00Z</updated>
+		<link href="http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online" />
+		<id>http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online</id>
+		<title>Logging to a remote server in Dynamics online</title>
+		<updated>2016-08-11T00:00:00Z</updated>
 		<content>
                                         
 
 
-&lt;p&gt;Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.&lt;/p&gt;
-&lt;p&gt;I'm optimistic that Regardless of how people feel about it, I think it will be a good fit for the system it's replacing.&lt;/p&gt;
-&lt;p&gt;Straight out of the gate however, there are a number of things that worried me.&lt;/p&gt;
-&lt;p&gt;First, the plugin code that I had been given had no tests, everything was static methods with raw linq-to-crm, so it wasn't even designed with testing in mind.&lt;/p&gt;
-&lt;p&gt;Secondly, the front end, a BA had written a bunch of JavaScript to add some nice features, but the JavaScript was potentially quite buggy in the way it was implemented.&lt;/p&gt;
-&lt;p&gt;Thirdly, I was entering the Dynamics scene with no training, and the knowledge that people have done a lot with Dynamics, but it's also really easy to screw it up.&lt;/p&gt;
-&lt;p&gt;With that in mind, I'd like to start a series of blog posts about how I reengineered our plugins with the following goals in mind:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;The plugins should be unit testable&lt;/li&gt;
-&lt;li&gt;The plugins should use IoC framework so that they only contain what they need to function.&lt;/li&gt;
-&lt;li&gt;The plugins should provide insight into how they're functioning&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Meanwhile on the frontend, I've set up a WebPack workflow to allow us to write ES6/7 JavaScript using Async/Await to improve the readability and durabiliy of the JavaScript.&lt;/p&gt;
-&lt;p&gt;It is my hope that my Blog will help others to write better code and provide a place where people can offer me advice to how I can improve our workflow as well.&lt;/p&gt;
-
+&lt;p&gt;As I mentioned in [a-poor-dynamics-plugin], diagnosing an issue can be challenging in Dynamics CRM Online. I have
+not yet had the pleasure of working with an on-premise install of Dynamics. To simplify debugging issues in my
+plugins, I felt it was desirable to log to a centralized log server.&lt;/p&gt;
+&lt;p&gt;I like to reuse other people's work where possible, so I first started investigating using NLog, which we had been
+using in the past for our projects and our newer code was already logging to Seq, so I was happy to find that there
+was an NLog target for Seq.&lt;/p&gt;
+&lt;p&gt;Adding a reference to NLog was easy, and I wrote some preliminary configuration code to try it out.&lt;/p&gt;
+&lt;p&gt;When I ran this in the Plugin Registration Replay, I learned a few things.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The Replay tool will accurately sandbox your plugin as if it were running in CRM.&lt;/li&gt;
+&lt;li&gt;All of your plugin's code must be contained within a single asembly.&lt;/li&gt;
+&lt;li&gt;NLog's initialization process uses code that is prohibited within the sandbox.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The first one is cool, it means that my code is highly likely to fail in the same manner as it would in CRM Online.&lt;/p&gt;
+&lt;p&gt;The second point is annoying, but not insurmountable. ILMerge.MSBuild.Tasks NuGet package solved that issue by just
+installing it, no further work was required (No furthwr work on the plugin itself at least, more on this in a later blog post).&lt;/p&gt;
+&lt;p&gt;The third however is a complete roadblock. Try though I might, I couldn't figure out a way to avoid some filesystem
+calls deep within the bowels of NLog.&lt;/p&gt;
+&lt;p&gt;Serilog, which is advocated by Seq, also suffers a similar problem, though if I recall correctly, the problem with
+Serilog was reflecting over private properties, which is also disallowed by the sandbox.&lt;/p&gt;
+&lt;p&gt;With NLog and Serilog being the only loggers that Seq natively supports, I decidedmit was time to unfortunately invest
+in writing my own logging framework.&lt;/p&gt;
+&lt;p&gt;I chose to keep ot as minimal as possible, recycling as little as possible from NLog, keeping the expected ILogger
+interface and supporting Seq's structured logging.&lt;/p&gt;
+&lt;p&gt;Something I noticed in my earliest tests were that my logs were rarely being sent.&lt;/p&gt;
+&lt;p&gt;I do not know definitively what the problem was, but I suspect the most likely cause for this is the Replay tool
+immediately killing the AppDomain and it's threads before flushing the logs had completed. Because of this, I
+reluctantly implemented IDisposable and did the flush on the same thread as the plugin itself.&lt;/p&gt;
+&lt;p&gt;This has some really bad implications though, because Seq uses HTTP POST to receive it's I still have to find a good way
+to balance the 20 second time limit that is imposed on Plugins. If the logging service is down, there's a good chance
+that CRM will rollback the transaction.&lt;/p&gt;
+&lt;p&gt;I'm of the opinion that a logging service is a nice debugging tool, if you need tracability, use CRM's auditing, if the
+logging service is down, everything should continue, so I expect further development into this train of thought.
+Ideally I'd like to cause the AppDomain to delay unloading until a background thread is finished flushing.&lt;/p&gt;
+&lt;p&gt;Another issue I have yet to find a really good solution to is where to store the configuration of the Seq server, and
+it's normal for us to include the environment in our logging. I don't really like the idea of having to configure the
+server address and api key on a per-message basis, and using an entity worries me as the startup behaviour of plugin
+assemblies appears to be undefined, so I don't want to introduce another trip through the organisation service to discover
+settings.&lt;/p&gt;
+&lt;p&gt;I've decided in the short term to introduce the values via the build system and keep them in the assembly until a better
+solution comes to me.&lt;/p&gt;
+&lt;p&gt;I'll be putting the code on GitHub as soon as feasible.&lt;/p&gt;
 
 
 
@@ -42,8 +69,8 @@
  *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables */
 /*
 var disqus_config = function () {
-    this.page.url = 'http://atomicblom.github.io/posts/hello-dynamics-world';  // Replace PAGE_URL with your page's canonical URL variable
-    this.page.identifier = 'hello-dynamics-world'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    this.page.url = 'http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online';  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = 'logging-to-a-remote-server-in-dynamics-online'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 };
 */
 (function() { // DON'T EDIT BELOW THIS LINE
@@ -55,7 +82,9 @@ var disqus_config = function () {
 &lt;/script&gt;
 &lt;noscript&gt;Please enable JavaScript to view the &lt;a href="https://disqus.com/?ref_noscript"&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
                                 </content>
-		<summary>&lt;p&gt;Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.&lt;/p&gt;</summary>
+		<summary>&lt;p&gt;As I mentioned in [a-poor-dynamics-plugin], diagnosing an issue can be challenging in Dynamics CRM Online. I have
+not yet had the pleasure of working with an on-premise install of Dynamics. To simplify debugging issues in my
+plugins, I felt it was desirable to log to a centralized log server.&lt;/p&gt;</summary>
 	</entry>
 	<entry>
 		<link href="http://atomicblom.github.io/posts/a-poor-dynamics-plugin" />
@@ -272,12 +301,10 @@ private EntityCollection SearchContactByEmail(IPluginExecutionContext context, I
 &lt;li&gt;Invoke the plugin.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;If all goes well, anything sent to the tracing service will be logged in the replay tool.&lt;/p&gt;
-&lt;p&gt;If that doesn't give you enough information, you'll need to debug the plugin:&lt;/p&gt;
-&lt;ol start="14"&gt;
-&lt;li&gt;Attach Visual Studio to the PluginRegistation tool with your solution open&lt;/li&gt;
-&lt;li&gt;Set a breakpoint where you wish to inspect.&lt;/li&gt;
-&lt;li&gt;Invoke the plugin again.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;If that doesn't give you enough information, you'll need to debug the plugin:
+14. Attach Visual Studio to the PluginRegistation tool with your solution open
+15. Set a breakpoint where you wish to inspect.
+16. Invoke the plugin again.&lt;/p&gt;
 &lt;p&gt;In my case, there were a few caveats to this. Turns out my message wasn't being invoked from the UI, but rather from an external API, with that in mind, and given the nature of the actual plugin, I'm not completely surprised that they weren't sending any information back to the service. It does however leave me wondering, how is a user of the system supposed to know that this business process failed? I have to go through 16 steps to figure out why as a developer?&lt;/p&gt;
 &lt;p&gt;In my case, the error was that one of the columns that used to exist and no longer does, I spoke with the various power users, and one explained he had renamed it because it had been inappropriately and confusingly named to begin with.&lt;/p&gt;
 &lt;p&gt;With that as my first experience, there were a few things I had resolved to do while I'm working on this system.&lt;/p&gt;
@@ -332,7 +359,6 @@ private EntityCollection SearchContactByEmail(IPluginExecutionContext context, I
 
 
 
-
 &lt;div id="disqus_thread"&gt;&lt;/div&gt;
 &lt;script&gt;
 
@@ -355,5 +381,61 @@ var disqus_config = function () {
 &lt;noscript&gt;Please enable JavaScript to view the &lt;a href="https://disqus.com/?ref_noscript"&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
                                 </content>
 		<summary>&lt;p&gt;I'd like to show you a slightly modified version of a plugin. This was the first piece of code I had ever seen for the purpose of extending Microsoft Dynamics' backend.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<link href="http://atomicblom.github.io/posts/hello-dynamics-world" />
+		<id>http://atomicblom.github.io/posts/hello-dynamics-world</id>
+		<title>Hello Dynamics World</title>
+		<updated>2016-05-08T00:00:00Z</updated>
+		<content>
+                                        
+
+
+&lt;p&gt;Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.&lt;/p&gt;
+&lt;p&gt;I'm optimistic that Regardless of how people feel about it, I think it will be a good fit for the system it's replacing.&lt;/p&gt;
+&lt;p&gt;Straight out of the gate however, there are a number of things that worried me.&lt;/p&gt;
+&lt;p&gt;First, the plugin code that I had been given had no tests, everything was static methods with raw linq-to-crm, so it
+wasn't even designed with testing in mind.&lt;/p&gt;
+&lt;p&gt;Secondly, the front end, a BA had written a bunch of JavaScript to add some nice features, but the JavaScript was
+potentially quite buggy in the way it was implemented.&lt;/p&gt;
+&lt;p&gt;Thirdly, I was entering the Dynamics scene with no training, and the knowledge that people have done a lot with
+Dynamics, but it's also really easy to screw it up.&lt;/p&gt;
+&lt;p&gt;With that in mind, I'd like to start a series of blog posts about how I reengineered our plugins with the following
+goals in mind:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The plugins should be unit testable&lt;/li&gt;
+&lt;li&gt;The plugins should use IoC framework so that they only contain what they need to function.&lt;/li&gt;
+&lt;li&gt;The plugins should provide insight into how they're functioning&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Meanwhile on the frontend, I've set up a WebPack workflow to allow us to write ES6/7 JavaScript using Async/Await to
+improve the readability and durabiliy of the JavaScript.&lt;/p&gt;
+&lt;p&gt;It is my hope that my Blog will help others to write better code and provide a place where people can offer me advice
+to how I can improve our workflow as well.&lt;/p&gt;
+
+
+
+
+&lt;div id="disqus_thread"&gt;&lt;/div&gt;
+&lt;script&gt;
+
+/**
+ *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+ *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables */
+/*
+var disqus_config = function () {
+    this.page.url = 'http://atomicblom.github.io/posts/hello-dynamics-world';  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = 'hello-dynamics-world'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = '//atomicblom-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();
+&lt;/script&gt;
+&lt;noscript&gt;Please enable JavaScript to view the &lt;a href="https://disqus.com/?ref_noscript"&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
+                                </content>
+		<summary>&lt;p&gt;Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.&lt;/p&gt;</summary>
 	</entry>
 </feed>

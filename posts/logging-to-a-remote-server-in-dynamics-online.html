@@ -6,7 +6,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Atomic Musings - About Me</title>
+        <title>Atomic Musings - Logging to a remote server in Dynamics online</title>
         <meta name="description" content="Atomic units of thought" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -30,10 +30,10 @@
         <meta name="msapplication-tooltip" content="Atomic Musings" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Atomic Musings - About Me" />
+        <meta property="og:title" content="Atomic Musings - Logging to a remote server in Dynamics online" />
         
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://atomicblom.github.io/about" />
+        <meta property="og:url" content="http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
@@ -89,9 +89,22 @@
                         <div class="container">
                                 <div class="row">
                                         <div class="col-md-12">
-<div class="site-heading">
-    <h1>About Me</h1>
-</div>                                            </div>
+
+    
+
+<div class="post-heading">
+    <h1>Logging to a remote server in Dynamics online</h1>
+        <h2 class="subheading">Logging in Dynamics should be easy right?</h2>
+    <div class="meta">        
+            Published on Thursday, August 11, 2016<br>
+    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/dynamicscrm" class="btn btn-default btn-xs">DynamicsCRM</a>
+                    <a role="button" href="/tags/logging" class="btn btn-default btn-xs">Logging</a>
+                    <a role="button" href="/tags/plugin" class="btn btn-default btn-xs">Plugin</a>
+        </div>     
+</div>
+                                        </div>
                                 </div>
                         </div>
                 </header>
@@ -100,11 +113,75 @@
                 <div class="container">
                         <div class="row">
                                 <div id="content" class="col-md-12">
-                                        <p>Hi, I'm Steven Blom, known online as AtomicBlom.</p>
-<p>I've been an avid coder for over 18 years, over languages like PHP, Java, Visual Basic for Applications, JavaScript, and my personal favourite, C#.</p>
-<p>In my spare time I enjoy writing mods for Minecraft, most notably, SteamNSteel.</p>
-<p>My current goal in life is to write a game that will challenge and encourage creativity for my kids.</p>
+                                        
 
+
+<p>As I mentioned in [a-poor-dynamics-plugin], diagnosing an issue can be challenging in Dynamics CRM Online. I have
+not yet had the pleasure of working with an on-premise install of Dynamics. To simplify debugging issues in my
+plugins, I felt it was desirable to log to a centralized log server.</p>
+<p>I like to reuse other people's work where possible, so I first started investigating using NLog, which we had been
+using in the past for our projects and our newer code was already logging to Seq, so I was happy to find that there
+was an NLog target for Seq.</p>
+<p>Adding a reference to NLog was easy, and I wrote some preliminary configuration code to try it out.</p>
+<p>When I ran this in the Plugin Registration Replay, I learned a few things.</p>
+<ul>
+<li>The Replay tool will accurately sandbox your plugin as if it were running in CRM.</li>
+<li>All of your plugin's code must be contained within a single asembly.</li>
+<li>NLog's initialization process uses code that is prohibited within the sandbox.</li>
+</ul>
+<p>The first one is cool, it means that my code is highly likely to fail in the same manner as it would in CRM Online.</p>
+<p>The second point is annoying, but not insurmountable. ILMerge.MSBuild.Tasks NuGet package solved that issue by just
+installing it, no further work was required (No furthwr work on the plugin itself at least, more on this in a later blog post).</p>
+<p>The third however is a complete roadblock. Try though I might, I couldn't figure out a way to avoid some filesystem
+calls deep within the bowels of NLog.</p>
+<p>Serilog, which is advocated by Seq, also suffers a similar problem, though if I recall correctly, the problem with
+Serilog was reflecting over private properties, which is also disallowed by the sandbox.</p>
+<p>With NLog and Serilog being the only loggers that Seq natively supports, I decidedmit was time to unfortunately invest
+in writing my own logging framework.</p>
+<p>I chose to keep ot as minimal as possible, recycling as little as possible from NLog, keeping the expected ILogger
+interface and supporting Seq's structured logging.</p>
+<p>Something I noticed in my earliest tests were that my logs were rarely being sent.</p>
+<p>I do not know definitively what the problem was, but I suspect the most likely cause for this is the Replay tool
+immediately killing the AppDomain and it's threads before flushing the logs had completed. Because of this, I
+reluctantly implemented IDisposable and did the flush on the same thread as the plugin itself.</p>
+<p>This has some really bad implications though, because Seq uses HTTP POST to receive it's I still have to find a good way
+to balance the 20 second time limit that is imposed on Plugins. If the logging service is down, there's a good chance
+that CRM will rollback the transaction.</p>
+<p>I'm of the opinion that a logging service is a nice debugging tool, if you need tracability, use CRM's auditing, if the
+logging service is down, everything should continue, so I expect further development into this train of thought.
+Ideally I'd like to cause the AppDomain to delay unloading until a background thread is finished flushing.</p>
+<p>Another issue I have yet to find a really good solution to is where to store the configuration of the Seq server, and
+it's normal for us to include the environment in our logging. I don't really like the idea of having to configure the
+server address and api key on a per-message basis, and using an entity worries me as the startup behaviour of plugin
+assemblies appears to be undefined, so I don't want to introduce another trip through the organisation service to discover
+settings.</p>
+<p>I've decided in the short term to introduce the values via the build system and keep them in the assembly until a better
+solution comes to me.</p>
+<p>I'll be putting the code on GitHub as soon as feasible.</p>
+
+
+
+
+<div id="disqus_thread"></div>
+<script>
+
+/**
+ *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+ *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables */
+/*
+var disqus_config = function () {
+    this.page.url = 'http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online';  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = 'logging-to-a-remote-server-in-dynamics-online'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = '//atomicblom-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
                                 </div>
                         </div>
                 </div>

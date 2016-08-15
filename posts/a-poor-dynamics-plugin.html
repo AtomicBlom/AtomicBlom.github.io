@@ -323,12 +323,10 @@ private EntityCollection SearchContactByEmail(IPluginExecutionContext context, I
 <li>Invoke the plugin.</li>
 </ol>
 <p>If all goes well, anything sent to the tracing service will be logged in the replay tool.</p>
-<p>If that doesn't give you enough information, you'll need to debug the plugin:</p>
-<ol start="14">
-<li>Attach Visual Studio to the PluginRegistation tool with your solution open</li>
-<li>Set a breakpoint where you wish to inspect.</li>
-<li>Invoke the plugin again.</li>
-</ol>
+<p>If that doesn't give you enough information, you'll need to debug the plugin:
+14. Attach Visual Studio to the PluginRegistation tool with your solution open
+15. Set a breakpoint where you wish to inspect.
+16. Invoke the plugin again.</p>
 <p>In my case, there were a few caveats to this. Turns out my message wasn't being invoked from the UI, but rather from an external API, with that in mind, and given the nature of the actual plugin, I'm not completely surprised that they weren't sending any information back to the service. It does however leave me wondering, how is a user of the system supposed to know that this business process failed? I have to go through 16 steps to figure out why as a developer?</p>
 <p>In my case, the error was that one of the columns that used to exist and no longer does, I spoke with the various power users, and one explained he had renamed it because it had been inappropriately and confusingly named to begin with.</p>
 <p>With that as my first experience, there were a few things I had resolved to do while I'm working on this system.</p>
@@ -379,7 +377,6 @@ private EntityCollection SearchContactByEmail(IPluginExecutionContext context, I
 </li>
 </ol>
 <p>Over the next few blog posts, I'll be discussing approaches to these points and how I've tackled them so far.</p>
-
 
 
 
