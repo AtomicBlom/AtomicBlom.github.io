@@ -1,9 +1,5 @@
 #theme AtomicBlog
-#n -l Wyam.Yaml
-#n -l Wyam.Markdown
-#n -l Wyam.Razor
-#n -l Wyam.Feeds
-#n -l Wyam.Html
+#n -p Wyam.All
 
 public static class BlogKeys
 {
