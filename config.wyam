@@ -1,5 +1,5 @@
 #theme AtomicBlog
-#n -p Wyam.All
+#n Wyam.All -s https://www.myget.org/F/wyam/api/v3/index.json -p
 
 public static class BlogKeys
 {
