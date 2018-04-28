@@ -4,7 +4,7 @@ Published: 2016-08-11
 Lead: Logging in Dynamics should be easy right?
 ---
 
-As I mentioned in [a-poor-dynamics-plugin], diagnosing an issue can be challenging in Dynamics CRM Online. I have
+As I mentioned in [a-poor-dynamics-plugin](/Posts/a-poor-dynamics-plugin), diagnosing an issue can be challenging in Dynamics CRM Online. I have
 not yet had the pleasure of working with an on-premise install of Dynamics. To simplify debugging issues in my
 plugins, I felt it was desirable to log to a centralized log server.
 
@@ -12,7 +12,7 @@ I like to reuse other people's work where possible, so I first started investiga
 using in the past for our projects and our newer code was already logging to Seq, so I was happy to find that there
 was an NLog target for Seq.
 
-Adding a reference to NLog was easy, and I wrote some preliminary configuration code to try it out.
+Adding a reference to [NLog](http://nlog-project.org) was easy, and I wrote some preliminary configuration code to try it out.
 
 When I ran this in the Plugin Registration Replay, I learned a few things.
 * The Replay tool will accurately sandbox your plugin as if it were running in CRM.
@@ -27,7 +27,7 @@ installing it, no further work was required (No furthwr work on the plugin itsel
 The third however is a complete roadblock. Try though I might, I couldn't figure out a way to avoid some filesystem 
 calls deep within the bowels of NLog.
 
-Serilog, which is advocated by Seq, also suffers a similar problem, though if I recall correctly, the problem with 
+[Serilog](https://serilog.net/), which is advocated by [Seq](https://getseq.net/), also suffers a similar problem, though if I recall correctly, the problem with 
 Serilog was reflecting over private properties, which is also disallowed by the sandbox.
 
 With NLog and Serilog being the only loggers that Seq natively supports, I decidedmit was time to unfortunately invest

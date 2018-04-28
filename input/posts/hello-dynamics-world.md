@@ -1,6 +1,6 @@
 Title: Hello Dynamics World
 Lead: A quick summary of my reaction to being immersed in Dynamics, and why I started this blog.
-Published: 5/8/2016
+Published: 2016-08-05
 Tags: DynamicsCRM
 ---
 Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM. 

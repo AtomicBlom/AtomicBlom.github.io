@@ -1,5 +1,5 @@
 Title: Various useful powershell commands for Windows 8 Server (beta)
-Posted: 2012-04-10
+Published: 2012-04-10
 Tags: [ 'Powershell', 'Windows 2012 Server', 'Server Core' ]
 ---
 I’ve been setting up a few instances of Windows 8 Server Core and couldn’t be bothered figuring out if CoreConfig works with Win8 so I thought I’d go the hard way and look at what cmdlets are provided for doing the most basic tasks I need such as:
