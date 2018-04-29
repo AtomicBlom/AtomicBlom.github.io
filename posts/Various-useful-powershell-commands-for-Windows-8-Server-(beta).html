@@ -6,7 +6,7 @@
 -->
 <html lang="en">
 	<head>
-		<title>Atomic Musings - Hello Dynamics World</title>
+		<title>Atomic Musings - Various useful powershell commands for Windows 8 Server (beta)</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="/assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -25,9 +25,9 @@
 		<meta name="msapplication-tooltip" content="Atomic Musings" />
 		<meta name="msapplication-starturl" content="/" />
 
-		<meta property="og:title" content="Atomic Musings - Hello Dynamics World" /> 
+		<meta property="og:title" content="Atomic Musings - Various useful powershell commands for Windows 8 Server (beta)" /> 
 		<meta property="og:type" content="website" />
-		<meta property="og:url" content="http://atomicblom.github.io/posts/hello-dynamics-world" />
+		<meta property="og:url" content="http://atomicblom.github.io/posts/Various-useful-powershell-commands-for-Windows-8-Server-(beta)" />
 		<!-- TODO: More social graph meta tags -->
         
 
@@ -42,10 +42,9 @@
 
     
 <header id="header">
-    <h1>Hello Dynamics World</h1>
-        <p>A quick summary of my reaction to being immersed in Dynamics, and why I started this blog.</p>
+    <h1>Various useful powershell commands for Windows 8 Server (beta)</h1>
     <hr/>     
-        <p><em>Published on Friday, August 5, 2016</em></p>
+        <p><em>Published on Tuesday, April 10, 2012</em></p>
 </header>
 
 			<!-- Nav -->
@@ -66,35 +65,27 @@
 					<section id="content" class="main">
 						
 
-<p>Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.</p>
-<p>I'm optimistic that Regardless of how people feel about it, I think it will be a good fit for the system it's replacing.</p>
-<p>Straight out of the gate however, there are a number of things that worried me.</p>
-<p>First, the plugin code that I had been given had no tests, everything was static methods with raw linq-to-crm, so it
-wasn't even designed with testing in mind.</p>
-<p>Secondly, the front end, a BA had written a bunch of JavaScript to add some nice features, but the JavaScript was
-potentially quite buggy in the way it was implemented.</p>
-<p>Thirdly, I was entering the Dynamics scene with no training, and the knowledge that people have done a lot with
-Dynamics, but it's also really easy to screw it up.</p>
-<p>With that in mind, I'd like to start a series of blog posts about how I reengineered our plugins with the following
-goals in mind:</p>
-<ol>
-<li>The plugins should be unit testable</li>
-<li>The plugins should use IoC framework so that they only contain what they need to function.</li>
-<li>The plugins should provide insight into how they're functioning</li>
-</ol>
-<p>Meanwhile on the frontend, I've set up a WebPack workflow to allow us to write ES6/7 JavaScript using Async/Await to
-improve the readability and durabiliy of the JavaScript.</p>
-<p>It is my hope that my Blog will help others to write better code and provide a place where people can offer me advice
-to how I can improve our workflow as well.</p>
+<p>I’ve been setting up a few instances of Windows 8 Server Core and couldn’t be bothered figuring out if CoreConfig works with Win8 so I thought I’d go the hard way and look at what cmdlets are provided for doing the most basic tasks I need such as:</p>
+<p>##Renaming a computer
+<code>Rename-Computer -NewName Server001 -DomainCredential Domain01\Admin01 -Restart</code></p>
+<p>##Get a desired network adapter’s interface index</p>
+<p><code>$adapterIndex = $(Get-NetIPAddress | where { $_.InterfaceAlias -eq &quot;Wired Ethernet Connection&quot; -and $_.AddressFamily -eq &quot;IPv4&quot; }).InterfaceIndex</code></p>
+<p>##Change the adapter’s IP Address to a static one:</p>
+<p><code>Remove-NetIPAddress -InterfaceIndex $adapterIndex -AddressFamily IPv4</code>
+<code>New-NetIPAddress -InterfaceIndex $adapterIndex -IPv4Address 192.168.0.2 -PrefixLength 24 -DefaultGateway 192.168.0.254</code></p>
+<p>##Change the DNS Settings (I decided to keep the pre-existing IPv6 Settings, using Set-DnsClientServerAddress will wipe out both IPv4 and IPv6 settings.)</p>
+<p><code>Set-DnsClientServerAddress -InterfaceIndex $adapterIndex -ServerAddresses &#64;(&quot;192.168.0.1&quot;, &quot;fec0:0:0:ffff::1&quot;, &quot;fec0:0:0:ffff::2&quot;, &quot;fec0:0:0:ffff::3&quot;)</code></p>
+<p>##Firewall Rules for SQL Server</p>
+<p><code>New-NetFirewallRule -DisplayName &quot;SQL Server Database&quot; -Profile Domain -Direction Inbound -Action Allow -LocalPort &#64;(&quot;1433&quot;, &quot;1434&quot;, &quot;4022&quot;, &quot;135&quot;) -Protocol TCP</code></p>
 
 
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
     var disqus_shortname = 'atomicblom-github-io';
-    var disqus_identifier = 'hello-dynamics-world';
-    var disqus_title = 'Hello Dynamics World';
-    var disqus_url = 'http://atomicblom.github.io/posts/hello-dynamics-world';
+    var disqus_identifier = 'Various-useful-powershell-commands-for-Windows-8-Server-(beta)';
+    var disqus_title = 'Various useful powershell commands for Windows 8 Server (beta)';
+    var disqus_url = 'http://atomicblom.github.io/posts/Various-useful-powershell-commands-for-Windows-8-Server-(beta)';
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {

@@ -6,7 +6,7 @@
 -->
 <html lang="en">
 	<head>
-		<title>Atomic Musings - Hello Dynamics World</title>
+		<title>Atomic Musings - Flex: 1046: Type was not found or was not a compile-time constant:</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="/assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -25,9 +25,9 @@
 		<meta name="msapplication-tooltip" content="Atomic Musings" />
 		<meta name="msapplication-starturl" content="/" />
 
-		<meta property="og:title" content="Atomic Musings - Hello Dynamics World" /> 
+		<meta property="og:title" content="Atomic Musings - Flex: 1046: Type was not found or was not a compile-time constant:" /> 
 		<meta property="og:type" content="website" />
-		<meta property="og:url" content="http://atomicblom.github.io/posts/hello-dynamics-world" />
+		<meta property="og:url" content="http://atomicblom.github.io/posts/Adobe-Flex-1046-Type-was-not-found-or-was-not-a-compile-time-constant" />
 		<!-- TODO: More social graph meta tags -->
         
 
@@ -42,10 +42,9 @@
 
     
 <header id="header">
-    <h1>Hello Dynamics World</h1>
-        <p>A quick summary of my reaction to being immersed in Dynamics, and why I started this blog.</p>
+    <h1>Flex: 1046: Type was not found or was not a compile-time constant:</h1>
     <hr/>     
-        <p><em>Published on Friday, August 5, 2016</em></p>
+        <p><em>Published on Monday, January 16, 2012</em></p>
 </header>
 
 			<!-- Nav -->
@@ -66,35 +65,35 @@
 					<section id="content" class="main">
 						
 
-<p>Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.</p>
-<p>I'm optimistic that Regardless of how people feel about it, I think it will be a good fit for the system it's replacing.</p>
-<p>Straight out of the gate however, there are a number of things that worried me.</p>
-<p>First, the plugin code that I had been given had no tests, everything was static methods with raw linq-to-crm, so it
-wasn't even designed with testing in mind.</p>
-<p>Secondly, the front end, a BA had written a bunch of JavaScript to add some nice features, but the JavaScript was
-potentially quite buggy in the way it was implemented.</p>
-<p>Thirdly, I was entering the Dynamics scene with no training, and the knowledge that people have done a lot with
-Dynamics, but it's also really easy to screw it up.</p>
-<p>With that in mind, I'd like to start a series of blog posts about how I reengineered our plugins with the following
-goals in mind:</p>
-<ol>
-<li>The plugins should be unit testable</li>
-<li>The plugins should use IoC framework so that they only contain what they need to function.</li>
-<li>The plugins should provide insight into how they're functioning</li>
-</ol>
-<p>Meanwhile on the frontend, I've set up a WebPack workflow to allow us to write ES6/7 JavaScript using Async/Await to
-improve the readability and durabiliy of the JavaScript.</p>
-<p>It is my hope that my Blog will help others to write better code and provide a place where people can offer me advice
-to how I can improve our workflow as well.</p>
+<p>#The Problem
+At my work, we have a legacy application known internally as “The Flex app”, maintaining this piece of software was the very reason I was hired, but as it turns out, Some of my other skills turned out to be more useful than my adaptability with new languages. Having said that, every now and then I need to do maintanence on this application, so, in accordance with the bug requests, I booted up Flex Builder 3.0.2 rolled back any outstanding changes and prepared to start again with a fresh slate. One problem: The clean project wouldn’t build.</p>
+<p><code>1046: Type was not found or was not a compile-time constant: LogEntry</code></p>
+<p>#The Investigation
+Anybody with any experience with Flex would know the solution to this problem within seconds: You’re forgetting an import. Bring in your type and everything will be fine.</p>
+<p>Unfortunately, my case was not so simple. Three people checking, double checking, so on were not able to help me figure out why I had an undefined constant:</p>
+<ul>
+<li>My Imports were in place</li>
+<li>The IDE recognised the types</li>
+<li>Removing them and using the IDE’s Autocomplete added the imports back in</li>
+<li>The Files containing the types were fine</li>
+<li>Removing the import and using the full package path did not solve the problem.</li>
+</ul>
+<p>The fact that the IDE was able to find the types, but the compiler couldn’t intrigued me most and after a long time of scratching my head, I had one of my “Gut Feelings”</p>
+<p>As I’m primarily a C# developer, sometimes I forget what land I’m programming in. In this particular instance, I had imported my WCF services into flex and accidentally prefixed the package names with Uppercase letters, like .NET namespaces. During the lifecycle of working on the app, I had deleted and recreated the services using varying casing for packages.</p>
+<p>#The Solution
+So, the solution was to make my filesystem folders consistent with the casing of the packages.</p>
+<p>#Final Thoughts
+This is a “bug” in the compiler, the IDE is not affected by this problem. Clearly this would be an issue on Linux or on a case-sensitive OS X filesystem, but I was a little surprised to run against it on Windows.</p>
+<p>I can’t help but wonder if even Java is this pedantic about casing.</p>
 
 
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
     var disqus_shortname = 'atomicblom-github-io';
-    var disqus_identifier = 'hello-dynamics-world';
-    var disqus_title = 'Hello Dynamics World';
-    var disqus_url = 'http://atomicblom.github.io/posts/hello-dynamics-world';
+    var disqus_identifier = 'Adobe-Flex-1046-Type-was-not-found-or-was-not-a-compile-time-constant';
+    var disqus_title = 'Flex: 1046: Type was not found or was not a compile-time constant:';
+    var disqus_url = 'http://atomicblom.github.io/posts/Adobe-Flex-1046-Type-was-not-found-or-was-not-a-compile-time-constant';
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
