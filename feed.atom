@@ -1,23 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-	<link rel="self" href="http://atomicblom.github.io/" />
 	<id>http://atomicblom.github.io/</id>
-	<title>Atomic Musings</title>
-	<rights>2018</rights>
-	<updated>2018-04-29T10:32:27Z</updated>
+	<title />
+	<link rel="self" href="http://atomicblom.github.io/" />
+	<rights>Copyright © 2021</rights>
+	<updated>2021-08-29T09:10:27Z</updated>
 	<subtitle>Atomic units of thought</subtitle>
 	<entry>
-		<link href="http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online" />
 		<id>http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online</id>
 		<title>Logging to a remote server in Dynamics online</title>
+		<link href="http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online" />
 		<updated>2016-08-11T00:00:00Z</updated>
-		<content>&lt;p&gt;As I mentioned in &lt;a href="/Posts/a-poor-dynamics-plugin"&gt;a-poor-dynamics-plugin&lt;/a&gt;, diagnosing an issue can be challenging in Dynamics CRM Online. I have
+		<content>&lt;p&gt;As I mentioned in &lt;a href="http://atomicblom.github.io/Posts/a-poor-dynamics-plugin"&gt;a-poor-dynamics-plugin&lt;/a&gt;, diagnosing an issue can be challenging in Dynamics CRM Online. I have
 not yet had the pleasure of working with an on-premise install of Dynamics. To simplify debugging issues in my
 plugins, I felt it was desirable to log to a centralized log server.&lt;/p&gt;
 &lt;p&gt;I like to reuse other people's work where possible, so I first started investigating using NLog, which we had been
 using in the past for our projects and our newer code was already logging to Seq, so I was happy to find that there
 was an NLog target for Seq.&lt;/p&gt;
-&lt;p&gt;Adding a reference to &lt;a href="http://nlog-project.org"&gt;NLog&lt;/a&gt; was easy, and I wrote some preliminary configuration code to try it out.&lt;/p&gt;
+&lt;p&gt;Adding a reference to &lt;a href="http://nlog-project.org/"&gt;NLog&lt;/a&gt; was easy, and I wrote some preliminary configuration code to try it out.&lt;/p&gt;
 &lt;p&gt;When I ran this in the Plugin Registration Replay, I learned a few things.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;The Replay tool will accurately sandbox your plugin as if it were running in CRM.&lt;/li&gt;
@@ -54,14 +54,12 @@ settings.&lt;/p&gt;
 solution comes to me.&lt;/p&gt;
 &lt;p&gt;I'll be putting the code on GitHub as soon as feasible.&lt;/p&gt;
 </content>
-		<summary>&lt;p&gt;As I mentioned in &lt;a href="/Posts/a-poor-dynamics-plugin"&gt;a-poor-dynamics-plugin&lt;/a&gt;, diagnosing an issue can be challenging in Dynamics CRM Online. I have
-not yet had the pleasure of working with an on-premise install of Dynamics. To simplify debugging issues in my
-plugins, I felt it was desirable to log to a centralized log server.&lt;/p&gt;</summary>
+		<summary>Atomic units of thought</summary>
 	</entry>
 	<entry>
-		<link href="http://atomicblom.github.io/posts/a-poor-dynamics-plugin" />
 		<id>http://atomicblom.github.io/posts/a-poor-dynamics-plugin</id>
 		<title>A Poor Dynamics Plugin</title>
+		<link href="http://atomicblom.github.io/posts/a-poor-dynamics-plugin" />
 		<updated>2016-08-07T00:00:00Z</updated>
 		<content>&lt;p&gt;I'd like to show you a slightly modified version of a plugin. This was the first piece of code I had ever seen for the purpose of extending Microsoft Dynamics' backend.&lt;/p&gt;
 &lt;p&gt;The reason I was asked to look at this code was because someone had changed something and the plugin was no longer working.&lt;/p&gt;
@@ -324,12 +322,12 @@ private EntityCollection SearchContactByEmail(IPluginExecutionContext context, I
 &lt;/ol&gt;
 &lt;p&gt;Over the next few blog posts, I'll be discussing approaches to these points and how I've tackled them so far.&lt;/p&gt;
 </content>
-		<summary>&lt;p&gt;I'd like to show you a slightly modified version of a plugin. This was the first piece of code I had ever seen for the purpose of extending Microsoft Dynamics' backend.&lt;/p&gt;</summary>
+		<summary>Atomic units of thought</summary>
 	</entry>
 	<entry>
-		<link href="http://atomicblom.github.io/posts/hello-dynamics-world" />
 		<id>http://atomicblom.github.io/posts/hello-dynamics-world</id>
 		<title>Hello Dynamics World</title>
+		<link href="http://atomicblom.github.io/posts/hello-dynamics-world" />
 		<updated>2016-08-05T00:00:00Z</updated>
 		<content>&lt;p&gt;Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.&lt;/p&gt;
 &lt;p&gt;I'm optimistic that Regardless of how people feel about it, I think it will be a good fit for the system it's replacing.&lt;/p&gt;
@@ -352,12 +350,12 @@ improve the readability and durabiliy of the JavaScript.&lt;/p&gt;
 &lt;p&gt;It is my hope that my Blog will help others to write better code and provide a place where people can offer me advice
 to how I can improve our workflow as well.&lt;/p&gt;
 </content>
-		<summary>&lt;p&gt;Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.&lt;/p&gt;</summary>
+		<summary>Atomic units of thought</summary>
 	</entry>
 	<entry>
-		<link href="http://atomicblom.github.io/posts/minecraft-server-on-server-core" />
 		<id>http://atomicblom.github.io/posts/minecraft-server-on-server-core</id>
 		<title>Minecraft server on Server Core? Totally Possible</title>
+		<link href="http://atomicblom.github.io/posts/minecraft-server-on-server-core" />
 		<updated>2012-06-02T00:00:00Z</updated>
 		<content>&lt;p&gt;So seeing a couple of youtube videos got me inspired to try out a completely modded Minecraft Server. RedPower 2 looks pretty cool, and the Tekkit Server makes this super easy.&lt;/p&gt;
 &lt;p&gt;Anyway, I thought to try it out on a Windows Server 2012 Release Candidate VM.&lt;/p&gt;
@@ -367,12 +365,12 @@ You will need to open firewall ports:&lt;/p&gt;
 &lt;p&gt;The latest JRE install will add java to the path, so after a restart, you can create a .bat file with the following (appropriate for a machine with 4GB RAM):&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;java -Xmx3072M -Xms1536M -jar Tekkit.jar nogui&lt;/code&gt;&lt;/p&gt;
 </content>
-		<summary>&lt;p&gt;So seeing a couple of youtube videos got me inspired to try out a completely modded Minecraft Server. RedPower 2 looks pretty cool, and the Tekkit Server makes this super easy.&lt;/p&gt;</summary>
+		<summary>Atomic units of thought</summary>
 	</entry>
 	<entry>
-		<link href="http://atomicblom.github.io/posts/Various-useful-powershell-commands-for-Windows-8-Server-(beta)" />
-		<id>http://atomicblom.github.io/posts/Various-useful-powershell-commands-for-Windows-8-Server-(beta)</id>
+		<id>http://atomicblom.github.io/posts/various-useful-powershell-commands-for-windows-8-server-beta</id>
 		<title>Various useful powershell commands for Windows 8 Server (beta)</title>
+		<link href="http://atomicblom.github.io/posts/various-useful-powershell-commands-for-windows-8-server-beta" />
 		<updated>2012-04-10T00:00:00Z</updated>
 		<content>&lt;p&gt;I’ve been setting up a few instances of Windows 8 Server Core and couldn’t be bothered figuring out if CoreConfig works with Win8 so I thought I’d go the hard way and look at what cmdlets are provided for doing the most basic tasks I need such as:&lt;/p&gt;
 &lt;p&gt;##Renaming a computer
@@ -387,12 +385,12 @@ You will need to open firewall ports:&lt;/p&gt;
 &lt;p&gt;##Firewall Rules for SQL Server&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;New-NetFirewallRule -DisplayName &amp;quot;SQL Server Database&amp;quot; -Profile Domain -Direction Inbound -Action Allow -LocalPort &amp;#64;(&amp;quot;1433&amp;quot;, &amp;quot;1434&amp;quot;, &amp;quot;4022&amp;quot;, &amp;quot;135&amp;quot;) -Protocol TCP&lt;/code&gt;&lt;/p&gt;
 </content>
-		<summary>&lt;p&gt;I’ve been setting up a few instances of Windows 8 Server Core and couldn’t be bothered figuring out if CoreConfig works with Win8 so I thought I’d go the hard way and look at what cmdlets are provided for doing the most basic tasks I need such as:&lt;/p&gt;</summary>
+		<summary>Atomic units of thought</summary>
 	</entry>
 	<entry>
-		<link href="http://atomicblom.github.io/posts/Adobe-Flex-1046-Type-was-not-found-or-was-not-a-compile-time-constant" />
-		<id>http://atomicblom.github.io/posts/Adobe-Flex-1046-Type-was-not-found-or-was-not-a-compile-time-constant</id>
+		<id>http://atomicblom.github.io/posts/adobe-flex-1046-type-was-not-found-or-was-not-a-compile-time-constant</id>
 		<title>Flex: 1046: Type was not found or was not a compile-time constant:</title>
+		<link href="http://atomicblom.github.io/posts/adobe-flex-1046-type-was-not-found-or-was-not-a-compile-time-constant" />
 		<updated>2012-01-16T00:00:00Z</updated>
 		<content>&lt;p&gt;#The Problem
 At my work, we have a legacy application known internally as “The Flex app”, maintaining this piece of software was the very reason I was hired, but as it turns out, Some of my other skills turned out to be more useful than my adaptability with new languages. Having said that, every now and then I need to do maintanence on this application, so, in accordance with the bug requests, I booted up Flex Builder 3.0.2 rolled back any outstanding changes and prepared to start again with a fresh slate. One problem: The clean project wouldn’t build.&lt;/p&gt;
@@ -415,7 +413,6 @@ So, the solution was to make my filesystem folders consistent with the casing of
 This is a “bug” in the compiler, the IDE is not affected by this problem. Clearly this would be an issue on Linux or on a case-sensitive OS X filesystem, but I was a little surprised to run against it on Windows.&lt;/p&gt;
 &lt;p&gt;I can’t help but wonder if even Java is this pedantic about casing.&lt;/p&gt;
 </content>
-		<summary>&lt;p&gt;#The Problem
-At my work, we have a legacy application known internally as “The Flex app”, maintaining this piece of software was the very reason I was hired, but as it turns out, Some of my other skills turned out to be more useful than my adaptability with new languages. Having said that, every now and then I need to do maintanence on this application, so, in accordance with the bug requests, I booted up Flex Builder 3.0.2 rolled back any outstanding changes and prepared to start again with a fresh slate. One problem: The clean project wouldn’t build.&lt;/p&gt;</summary>
+		<summary>Atomic units of thought</summary>
 	</entry>
 </feed>

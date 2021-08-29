@@ -7,9 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Atomic units of thought">
 
-  <title>Atomic Musings - Logging to a remote server in Dynamics online</title>
+  <title>Atomic Musings - Flex: 1046: Type was not found or was not a compile-time constant:</title>
 
-  <link rel="canonical" href="http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online">
+  <link rel="canonical" href="http://atomicblom.github.io/posts/adobe-flex-1046-type-was-not-found-or-was-not-a-compile-time-constant">
 
       <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
       <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
@@ -18,9 +18,9 @@
   <meta name="msapplication-tooltip" content="Atomic Musings" />
   <meta name="msapplication-starturl" content="/" />
 
-  <meta property="og:title" content="Atomic Musings - Logging to a remote server in Dynamics online" />
+  <meta property="og:title" content="Atomic Musings - Flex: 1046: Type was not found or was not a compile-time constant:" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online" />
+  <meta property="og:url" content="http://atomicblom.github.io/posts/adobe-flex-1046-type-was-not-found-or-was-not-a-compile-time-constant" />
   
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -85,14 +85,11 @@
       <div class="col-md-12">
         <div class="post-heading">
           <h1>
-            Logging to a remote server in Dynamics online
+            Flex: 1046: Type was not found or was not a compile-time constant:
           </h1>
-            <h2 class="subheading">Logging in Dynamics should be easy right?</h2>
-              <div class="meta">Published on Thursday, 11 August 2016</div>
+              <div class="meta">Published on Monday, 16 January 2012</div>
                 <div class="mt-3">
-                      <a href="/tags/dynamicscrm" class="badge badge-light"> DynamicsCRM</a>
-                      <a href="/tags/logging" class="badge badge-light"> Logging</a>
-                      <a href="/tags/plugin" class="badge badge-light"> Plugin</a>
+                      <a href="/tags/adobe-flex" class="badge badge-light"> Adobe Flex</a>
                 </div>
         </div>
       </div>
@@ -104,56 +101,34 @@
   <div class="container"> 
     <div class="row">
       <div id="content" class="col-md-12">  
-        <p>As I mentioned in <a href="/Posts/a-poor-dynamics-plugin">a-poor-dynamics-plugin</a>, diagnosing an issue can be challenging in Dynamics CRM Online. I have
-not yet had the pleasure of working with an on-premise install of Dynamics. To simplify debugging issues in my
-plugins, I felt it was desirable to log to a centralized log server.</p>
-<p>I like to reuse other people's work where possible, so I first started investigating using NLog, which we had been
-using in the past for our projects and our newer code was already logging to Seq, so I was happy to find that there
-was an NLog target for Seq.</p>
-<p>Adding a reference to <a href="http://nlog-project.org/">NLog</a> was easy, and I wrote some preliminary configuration code to try it out.</p>
-<p>When I ran this in the Plugin Registration Replay, I learned a few things.</p>
+        <p>#The Problem
+At my work, we have a legacy application known internally as “The Flex app”, maintaining this piece of software was the very reason I was hired, but as it turns out, Some of my other skills turned out to be more useful than my adaptability with new languages. Having said that, every now and then I need to do maintanence on this application, so, in accordance with the bug requests, I booted up Flex Builder 3.0.2 rolled back any outstanding changes and prepared to start again with a fresh slate. One problem: The clean project wouldn’t build.</p>
+<p><code>1046: Type was not found or was not a compile-time constant: LogEntry</code></p>
+<p>#The Investigation
+Anybody with any experience with Flex would know the solution to this problem within seconds: You’re forgetting an import. Bring in your type and everything will be fine.</p>
+<p>Unfortunately, my case was not so simple. Three people checking, double checking, so on were not able to help me figure out why I had an undefined constant:</p>
 <ul>
-<li>The Replay tool will accurately sandbox your plugin as if it were running in CRM.</li>
-<li>All of your plugin's code must be contained within a single asembly.</li>
-<li>NLog's initialization process uses code that is prohibited within the sandbox.</li>
+<li>My Imports were in place</li>
+<li>The IDE recognised the types</li>
+<li>Removing them and using the IDE’s Autocomplete added the imports back in</li>
+<li>The Files containing the types were fine</li>
+<li>Removing the import and using the full package path did not solve the problem.</li>
 </ul>
-<p>The first one is cool, it means that my code is highly likely to fail in the same manner as it would in CRM Online.</p>
-<p>The second point is annoying, but not insurmountable. ILMerge.MSBuild.Tasks NuGet package solved that issue by just
-installing it, no further work was required (No furthwr work on the plugin itself at least, more on this in a later blog post).</p>
-<p>The third however is a complete roadblock. Try though I might, I couldn't figure out a way to avoid some filesystem
-calls deep within the bowels of NLog.</p>
-<p><a href="https://serilog.net/">Serilog</a>, which is advocated by <a href="https://getseq.net/">Seq</a>, also suffers a similar problem, though if I recall correctly, the problem with
-Serilog was reflecting over private properties, which is also disallowed by the sandbox.</p>
-<p>With NLog and Serilog being the only loggers that Seq natively supports, I decidedmit was time to unfortunately invest
-in writing my own logging framework.</p>
-<p>I chose to keep ot as minimal as possible, recycling as little as possible from NLog, keeping the expected ILogger
-interface and supporting Seq's structured logging.</p>
-<p>Something I noticed in my earliest tests were that my logs were rarely being sent.</p>
-<p>I do not know definitively what the problem was, but I suspect the most likely cause for this is the Replay tool
-immediately killing the AppDomain and it's threads before flushing the logs had completed. Because of this, I
-reluctantly implemented IDisposable and did the flush on the same thread as the plugin itself.</p>
-<p>This has some really bad implications though, because Seq uses HTTP POST to receive it's I still have to find a good way
-to balance the 20 second time limit that is imposed on Plugins. If the logging service is down, there's a good chance
-that CRM will rollback the transaction.</p>
-<p>I'm of the opinion that a logging service is a nice debugging tool, if you need tracability, use CRM's auditing, if the
-logging service is down, everything should continue, so I expect further development into this train of thought.
-Ideally I'd like to cause the AppDomain to delay unloading until a background thread is finished flushing.</p>
-<p>Another issue I have yet to find a really good solution to is where to store the configuration of the Seq server, and
-it's normal for us to include the environment in our logging. I don't really like the idea of having to configure the
-server address and api key on a per-message basis, and using an entity worries me as the startup behaviour of plugin
-assemblies appears to be undefined, so I don't want to introduce another trip through the organisation service to discover
-settings.</p>
-<p>I've decided in the short term to introduce the values via the build system and keep them in the assembly until a better
-solution comes to me.</p>
-<p>I'll be putting the code on GitHub as soon as feasible.</p>
+<p>The fact that the IDE was able to find the types, but the compiler couldn’t intrigued me most and after a long time of scratching my head, I had one of my “Gut Feelings”</p>
+<p>As I’m primarily a C# developer, sometimes I forget what land I’m programming in. In this particular instance, I had imported my WCF services into flex and accidentally prefixed the package names with Uppercase letters, like .NET namespaces. During the lifecycle of working on the app, I had deleted and recreated the services using varying casing for packages.</p>
+<p>#The Solution
+So, the solution was to make my filesystem folders consistent with the casing of the packages.</p>
+<p>#Final Thoughts
+This is a “bug” in the compiler, the IDE is not affected by this problem. Clearly this would be an issue on Linux or on a case-sensitive OS X filesystem, but I was a little surprised to run against it on Windows.</p>
+<p>I can’t help but wonder if even Java is this pedantic about casing.</p>
 
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
     var disqus_shortname = 'atomicblom-github-io';
-    var disqus_identifier = 'logging-to-a-remote-server-in-dynamics-online';
-    var disqus_title = 'Logging to a remote server in Dynamics online';
-    var disqus_url = 'http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online';
+    var disqus_identifier = 'adobe-flex-1046-type-was-not-found-or-was-not-a-compile-time-constant';
+    var disqus_title = 'Flex: 1046: Type was not found or was not a compile-time constant:';
+    var disqus_url = 'http://atomicblom.github.io/posts/adobe-flex-1046-type-was-not-found-or-was-not-a-compile-time-constant';
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
