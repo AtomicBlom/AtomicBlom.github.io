@@ -38,7 +38,7 @@ steps:
       rm -rf ./cache
       rm -rf ./obj
       echo "Adding CNAME file"
-      echo "www.binaryvibrance.net" >> ./CNAME 
+      echo -n "www.binaryvibrance.net" >> ./CNAME 
       echo "Adding all files from output directory"
       git add -A
       echo "Performing commit"
