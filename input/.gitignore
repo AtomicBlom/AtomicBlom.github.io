@@ -1,0 +1,6 @@
+bin/
+cache/
+output/
+obj/
+temp/
+wwwroot/

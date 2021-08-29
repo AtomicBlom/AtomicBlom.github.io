@@ -1,0 +1,46 @@
+trigger:
+- source
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: 'Release'
+  dotNetFramework: 'net6.0'
+  dotNetVersion: '6.0.x'
+
+steps:
+- checkout: self
+  persistCredentials: true
+
+- task: UseDotNet@2
+  inputs:
+    version: $(dotNetVersion)
+    includePreviewVersions: true
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'run'
+    arguments: '--output $(Build.ArtifactStagingDirectory)/output'
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo "Checking out master"
+      git checkout master
+      echo "Configuring Git User"
+      git config --global user.email "atomicblom@binaryvibrance.net"
+      git config --global user.name "Azure DevOps"
+      echo "Removing all files in Git"
+      git rm -rf .
+      echo "Copying over output from $(Build.ArtifactStagingDirectory)/output/* to ."
+      cp -r $(Build.ArtifactStagingDirectory)/output/* .
+      echo "Cleaning up unexpected files"
+      rm -rf ./bin
+      rm -rf ./cache
+      rm -rf ./obj
+      echo "Adding all files from output directory"
+      git add -A
+      echo "Performing commit"
+      git commit -a -m "Commit from Azure DevOps"
+      echo "Pusing to remote"
+      git push
