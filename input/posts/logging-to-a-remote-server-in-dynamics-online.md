@@ -4,7 +4,7 @@ Published: 2016-08-11
 Lead: Logging in Dynamics should be easy right?
 ---
 
-As I mentioned in [a-poor-dynamics-plugin](/Posts/a-poor-dynamics-plugin), diagnosing an issue can be challenging in Dynamics CRM Online. I have
+As I mentioned in [A Poor Dynamics Plugin](xref:a-poor-dynamics-plugin), diagnosing an issue can be challenging in Dynamics CRM Online. I have
 not yet had the pleasure of working with an on-premise install of Dynamics. To simplify debugging issues in my
 plugins, I felt it was desirable to log to a centralized log server.
 
@@ -22,7 +22,7 @@ When I ran this in the Plugin Registration Replay, I learned a few things.
 The first one is cool, it means that my code is highly likely to fail in the same manner as it would in CRM Online.
 
 The second point is annoying, but not insurmountable. ILMerge.MSBuild.Tasks NuGet package solved that issue by just 
-installing it, no further work was required (No furthwr work on the plugin itself at least, more on this in a later blog post).
+installing it, no further work was required (No further work on the plugin itself at least there were other issues).
 
 The third however is a complete roadblock. Try though I might, I couldn't figure out a way to avoid some filesystem 
 calls deep within the bowels of NLog.
@@ -30,10 +30,10 @@ calls deep within the bowels of NLog.
 [Serilog](https://serilog.net/), which is advocated by [Seq](https://getseq.net/), also suffers a similar problem, though if I recall correctly, the problem with 
 Serilog was reflecting over private properties, which is also disallowed by the sandbox.
 
-With NLog and Serilog being the only loggers that Seq natively supports, I decidedmit was time to unfortunately invest
+With NLog and Serilog being the only loggers that Seq natively supports, I decided it was time to unfortunately invest
 in writing my own logging framework.
 
-I chose to keep ot as minimal as possible, recycling as little as possible from NLog, keeping the expected ILogger 
+I chose to keep to as minimal as possible, recycling as little as possible from NLog, keeping the expected ILogger 
 interface and supporting Seq's structured logging.
 
 Something I noticed in my earliest tests were that my logs were rarely being sent.
@@ -58,5 +58,3 @@ settings.
 
 I've decided in the short term to introduce the values via the build system and keep them in the assembly until a better
 solution comes to me.
-
-I'll be putting the code on GitHub as soon as feasible.

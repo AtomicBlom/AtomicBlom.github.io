@@ -5,7 +5,7 @@ Tags: DynamicsCRM
 ---
 Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM. 
 
-I'm optimistic that Regardless of how people feel about it, I think it will be a good fit for the system it's replacing.
+I'm optimistic that regardless of how people feel about it, I think it will be a good fit for the system it's replacing.
 
 Straight out of the gate however, there are a number of things that worried me.
 

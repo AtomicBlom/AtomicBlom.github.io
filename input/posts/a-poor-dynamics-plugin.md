@@ -9,7 +9,7 @@ The reason I was asked to look at this code was because someone had changed some
 
 The first bit of code I ever looked at for dynamics looked something like this:
 
-```
+```csharp
 public class WebInteraction : IPlugin
 {
     /// <summary>
@@ -119,7 +119,7 @@ I'm grateful that they at least left in the comments as to what context.Stage is
 
 Let's strip this down to what they actually used.
 
-```
+```csharp
 public class WebInteraction : IPlugin
 {
     public void Execute(IServiceProvider serviceProvider)
@@ -170,7 +170,7 @@ A few more things come to mind after cleaning this up.
 
 To add to all this and make things more interesting, we'll take a quick peek at an example of the business logic.
 
-```
+```csharp
 private void DoImportantBusinessLogic(IPluginExecutionContext context, IOrganizationService service, Entity interaction)
 {
     string email = interaction.GetAttributeValue<string>("new_email");
