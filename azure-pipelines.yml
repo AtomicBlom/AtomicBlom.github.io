@@ -42,6 +42,6 @@ steps:
       echo "Adding all files from output directory"
       git add -A
       echo "Performing commit"
-      git commit -a -m "Commit from Azure DevOps"
+      git commit -a -m "Build $(Build.SourceVersionMessage)"
       echo "Pusing to remote"
       git push
