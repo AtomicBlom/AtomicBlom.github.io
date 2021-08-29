@@ -108,7 +108,7 @@
         <p>I'd like to show you a slightly modified version of a plugin. This was the first piece of code I had ever seen for the purpose of extending Microsoft Dynamics' backend.</p>
 <p>The reason I was asked to look at this code was because someone had changed something and the plugin was no longer working.</p>
 <p>The first bit of code I ever looked at for dynamics looked something like this:</p>
-<pre><code>public class WebInteraction : IPlugin
+<pre><code class="language-csharp">public class WebInteraction : IPlugin
 {
     /// &lt;summary&gt;
     /// Wrapper function for plugin.
@@ -213,7 +213,7 @@
 <p>This strikes me as some code that someone has grabbed from a template, messed with the bare minimum to get it running and hasn't even stripped out the code that does nothing.</p>
 <p>I'm grateful that they at least left in the comments as to what context.Stage is, because if I'd just seen <code>if (context.Stage == 40)</code> I'd be mighty confused.</p>
 <p>Let's strip this down to what they actually used.</p>
-<pre><code>public class WebInteraction : IPlugin
+<pre><code class="language-csharp">public class WebInteraction : IPlugin
 {
     public void Execute(IServiceProvider serviceProvider)
     {
@@ -262,7 +262,7 @@
 <li>Why catch and log? Why not report an error to the caller?</li>
 </ol>
 <p>To add to all this and make things more interesting, we'll take a quick peek at an example of the business logic.</p>
-<pre><code>private void DoImportantBusinessLogic(IPluginExecutionContext context, IOrganizationService service, Entity interaction)
+<pre><code class="language-csharp">private void DoImportantBusinessLogic(IPluginExecutionContext context, IOrganizationService service, Entity interaction)
 {
     string email = interaction.GetAttributeValue&lt;string&gt;(&quot;new_email&quot;);
     Entity contact = SearchContactByEmail(context, service, email);

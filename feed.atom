@@ -4,14 +4,43 @@
 	<title />
 	<link rel="self" href="http://atomicblom.github.io/" />
 	<rights>Copyright © 2021</rights>
-	<updated>2021-08-29T09:28:20Z</updated>
+	<updated>2021-08-29T10:13:17Z</updated>
 	<subtitle>Atomic units of thought</subtitle>
+	<entry>
+		<id>http://atomicblom.github.io/posts/a-place-to-think</id>
+		<title>A place to think</title>
+		<link href="http://atomicblom.github.io/posts/a-place-to-think" />
+		<updated>2021-08-29T00:00:00Z</updated>
+		<content>&lt;p&gt;I've neglected my web presence for quite a while now, and I've had a couple of spaces where I intended to put information and just never got around to it.&lt;/p&gt;
+&lt;p&gt;I've long since gotten sick of dealing with hackers messing with my websites and while I do use more secure technologies for authenticating and authorizing users, the most
+secure websites are the ones that don't have dynamic content in the first place. My content doesn't change often, and I can farm out the dynamic discussion part of my website to
+Disqus to avoid a lot of headaches.&lt;/p&gt;
+&lt;p&gt;I started a space on GitHub pages using Wyam.io a few years back and ported across a couple of posts from my Wordpress blog on BinaryVibrance.net, but I never got around to
+porting the website itself
+over to GitHub.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://www.binaryvibrance.net/"&gt;www.binaryvibrance.net&lt;/a&gt; was hacked a number of years ago, no idea when and I hadn't even noticed, so I decided to pull the plug on having a dedicated host for my website and
+bite the bullet.&lt;/p&gt;
+&lt;p&gt;I noticed that Wyam has been superceded by &lt;a href="https://www.statiq.dev/"&gt;Statiq&lt;/a&gt; and moving across was... painless? As long as I was willing to give up the theme that I was using
+at the time.
+Not the end of the world, but I'm not a designer geared towards HTML nowadays, but I'll see what I can do later.&lt;/p&gt;
+&lt;p&gt;When I last tackled this blog, I was on an adventure for my employer to rewrite their customer relations system into Dynamics CRM. The project fell in a heap and died. I never
+had the time to
+write any further blog posts and no longer have any reason to. I've since left that employer and moved on to writing UWP software.&lt;/p&gt;
+&lt;p&gt;I had spent a lot of my personal time writing Minecraft Mods for a while and that was a fantastic period of my life where I've met a LOT of friends that I still cherish today,
+even though I've burnt out and not really interested in it any more. I even got features on the &lt;a href="https://www.minecraft.net/en-us/article/scripting-api-now-public-beta"&gt;minecraft.net homepage&lt;/a&gt;,
+which was an absolute highlight of my life at the time.&lt;/p&gt;
+&lt;p&gt;For the last few years I've felt a yearning to write my own game, and that's where I'm at right now. I've been working on a project, that time permitting I'll start writing a
+series of blog posts about that go into the details of it.&lt;/p&gt;
+&lt;p&gt;But for now, at least my homepage doesn't advertise some church I've never heard of anymore.&lt;/p&gt;
+</content>
+		<summary>Atomic units of thought</summary>
+	</entry>
 	<entry>
 		<id>http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online</id>
 		<title>Logging to a remote server in Dynamics online</title>
 		<link href="http://atomicblom.github.io/posts/logging-to-a-remote-server-in-dynamics-online" />
 		<updated>2016-08-11T00:00:00Z</updated>
-		<content>&lt;p&gt;As I mentioned in &lt;a href="http://atomicblom.github.io/Posts/a-poor-dynamics-plugin"&gt;a-poor-dynamics-plugin&lt;/a&gt;, diagnosing an issue can be challenging in Dynamics CRM Online. I have
+		<content>&lt;p&gt;As I mentioned in &lt;a href="xref:a-poor-dynamics-plugin"&gt;A Poor Dynamics Plugin&lt;/a&gt;, diagnosing an issue can be challenging in Dynamics CRM Online. I have
 not yet had the pleasure of working with an on-premise install of Dynamics. To simplify debugging issues in my
 plugins, I felt it was desirable to log to a centralized log server.&lt;/p&gt;
 &lt;p&gt;I like to reuse other people's work where possible, so I first started investigating using NLog, which we had been
@@ -26,14 +55,14 @@ was an NLog target for Seq.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;The first one is cool, it means that my code is highly likely to fail in the same manner as it would in CRM Online.&lt;/p&gt;
 &lt;p&gt;The second point is annoying, but not insurmountable. ILMerge.MSBuild.Tasks NuGet package solved that issue by just
-installing it, no further work was required (No furthwr work on the plugin itself at least, more on this in a later blog post).&lt;/p&gt;
+installing it, no further work was required (No further work on the plugin itself at least there were other issues).&lt;/p&gt;
 &lt;p&gt;The third however is a complete roadblock. Try though I might, I couldn't figure out a way to avoid some filesystem
 calls deep within the bowels of NLog.&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://serilog.net/"&gt;Serilog&lt;/a&gt;, which is advocated by &lt;a href="https://getseq.net/"&gt;Seq&lt;/a&gt;, also suffers a similar problem, though if I recall correctly, the problem with
 Serilog was reflecting over private properties, which is also disallowed by the sandbox.&lt;/p&gt;
-&lt;p&gt;With NLog and Serilog being the only loggers that Seq natively supports, I decidedmit was time to unfortunately invest
+&lt;p&gt;With NLog and Serilog being the only loggers that Seq natively supports, I decided it was time to unfortunately invest
 in writing my own logging framework.&lt;/p&gt;
-&lt;p&gt;I chose to keep ot as minimal as possible, recycling as little as possible from NLog, keeping the expected ILogger
+&lt;p&gt;I chose to keep to as minimal as possible, recycling as little as possible from NLog, keeping the expected ILogger
 interface and supporting Seq's structured logging.&lt;/p&gt;
 &lt;p&gt;Something I noticed in my earliest tests were that my logs were rarely being sent.&lt;/p&gt;
 &lt;p&gt;I do not know definitively what the problem was, but I suspect the most likely cause for this is the Replay tool
@@ -52,7 +81,6 @@ assemblies appears to be undefined, so I don't want to introduce another trip th
 settings.&lt;/p&gt;
 &lt;p&gt;I've decided in the short term to introduce the values via the build system and keep them in the assembly until a better
 solution comes to me.&lt;/p&gt;
-&lt;p&gt;I'll be putting the code on GitHub as soon as feasible.&lt;/p&gt;
 </content>
 		<summary>Atomic units of thought</summary>
 	</entry>
@@ -64,7 +92,7 @@ solution comes to me.&lt;/p&gt;
 		<content>&lt;p&gt;I'd like to show you a slightly modified version of a plugin. This was the first piece of code I had ever seen for the purpose of extending Microsoft Dynamics' backend.&lt;/p&gt;
 &lt;p&gt;The reason I was asked to look at this code was because someone had changed something and the plugin was no longer working.&lt;/p&gt;
 &lt;p&gt;The first bit of code I ever looked at for dynamics looked something like this:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;public class WebInteraction : IPlugin
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public class WebInteraction : IPlugin
 {
     /// &amp;lt;summary&amp;gt;
     /// Wrapper function for plugin.
@@ -169,7 +197,7 @@ solution comes to me.&lt;/p&gt;
 &lt;p&gt;This strikes me as some code that someone has grabbed from a template, messed with the bare minimum to get it running and hasn't even stripped out the code that does nothing.&lt;/p&gt;
 &lt;p&gt;I'm grateful that they at least left in the comments as to what context.Stage is, because if I'd just seen &lt;code&gt;if (context.Stage == 40)&lt;/code&gt; I'd be mighty confused.&lt;/p&gt;
 &lt;p&gt;Let's strip this down to what they actually used.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;public class WebInteraction : IPlugin
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public class WebInteraction : IPlugin
 {
     public void Execute(IServiceProvider serviceProvider)
     {
@@ -218,7 +246,7 @@ solution comes to me.&lt;/p&gt;
 &lt;li&gt;Why catch and log? Why not report an error to the caller?&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;To add to all this and make things more interesting, we'll take a quick peek at an example of the business logic.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;private void DoImportantBusinessLogic(IPluginExecutionContext context, IOrganizationService service, Entity interaction)
+&lt;pre&gt;&lt;code class="language-csharp"&gt;private void DoImportantBusinessLogic(IPluginExecutionContext context, IOrganizationService service, Entity interaction)
 {
     string email = interaction.GetAttributeValue&amp;lt;string&amp;gt;(&amp;quot;new_email&amp;quot;);
     Entity contact = SearchContactByEmail(context, service, email);
@@ -330,7 +358,7 @@ private EntityCollection SearchContactByEmail(IPluginExecutionContext context, I
 		<link href="http://atomicblom.github.io/posts/hello-dynamics-world" />
 		<updated>2016-08-05T00:00:00Z</updated>
 		<content>&lt;p&gt;Over the last month and a bit or so at my work, I've been working on replacing a legacy system with Dynamics CRM.&lt;/p&gt;
-&lt;p&gt;I'm optimistic that Regardless of how people feel about it, I think it will be a good fit for the system it's replacing.&lt;/p&gt;
+&lt;p&gt;I'm optimistic that regardless of how people feel about it, I think it will be a good fit for the system it's replacing.&lt;/p&gt;
 &lt;p&gt;Straight out of the gate however, there are a number of things that worried me.&lt;/p&gt;
 &lt;p&gt;First, the plugin code that I had been given had no tests, everything was static methods with raw linq-to-crm, so it
 wasn't even designed with testing in mind.&lt;/p&gt;
